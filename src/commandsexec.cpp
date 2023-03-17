@@ -179,7 +179,6 @@ void CommandsExec::buildRoute(QString start, QString finish)
     urlRoute += "&rtt=mt";
     //Включить показ пробок l=trf
     urlRoute += "&l=trf";
-
     arguments.clear();
     arguments << "--chrome-frame" << "-kiosk" << urlRoute;
     notRepeat = false;
@@ -188,7 +187,6 @@ void CommandsExec::buildRoute(QString start, QString finish)
 
 void CommandsExec::openYandexWeather(QString location)
 {
-    //    https://yandex.ru/pogoda/?lat=55.81579208&lon=37.38003159&via=srp
     QStringList point = location.split(" ");
     QString latitude = point.at(1);
     QString longitude = point.at(0);
@@ -197,7 +195,6 @@ void CommandsExec::openYandexWeather(QString location)
     url += latitude;
     url+= "&lon=";
     url += longitude;
-
     QString browser = "C:/Program Files/Google/Chrome/Application/chrome.exe";
     arguments.clear();
     arguments << "--chrome-frame" << "-kiosk" << url;
@@ -241,7 +238,6 @@ void CommandsExec::minimizeActiveWindow()
 {
     HWND hWnd = GetForegroundWindow();
     notRepeat = false;
-    //Сворачиваем активное окно /окно с которым в данный момент работает пользователь
     ShowWindow(hWnd, SW_SHOWMINIMIZED);
 }
 
@@ -249,14 +245,11 @@ void CommandsExec::closeActiveWindow()
 {
     HWND hWnd = GetForegroundWindow();
     notRepeat = false;
-    //Закрываем активное окно /окно с которым в данный момент работает пользователь
     PostMessage(hWnd, WM_CLOSE, 0, 0);
 }
 
 void CommandsExec::findFileInExplorer(QString command)
 {
-    //Экранироание команды cmd достигается за счёт \"команда\"
-    //Экранирование обратного слыэша достигается ещё одним обратным слэшем
     bool foundType = false;
     bool foundDir = false;
     while (command[0] == "-"
@@ -303,7 +296,6 @@ void CommandsExec::findFileInExplorer(QString command)
             currentDir = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
             currentDir.replace("/", "\\");
             currentDir += "&";
-//            currentDir = "C:\\Users\\<user>\\Desktop&";
             foundDir = true;
             request = "@start explorer.exe \"search-ms:query=";
             request += currentType;
@@ -317,13 +309,6 @@ void CommandsExec::findFileInExplorer(QString command)
     const char *c_str = bytes.data();
     std::system(c_str);
     notRepeat = false;
-    //Выполнить команду поиска файла в проводнике windows
-    //    std::system("@start explorer.exe \"search-ms:query=a*.pdf&crumb=location:c:\&\"");
-    //    std::system("@start explorer.exe \"search-ms:query=IMG_9356&crumb=location:C:\\Users&\"");
-    //Поиск в общих изображениях
-    //    std::system("@start explorer.exe \"search-ms:query=*.jpg OR *.png&crumb=location:C:\\Users\\Public\\Pictures&\"");
-    //    std::system("@start explorer.exe \"search-ms:query=*.jpg OR *.png&crumb=location:C:\\Users\\506\\Desktop\\from_Desktop_11_03_22&\"");
-
 }
 
 void CommandsExec::searhPathFile(QDir dir, QStringList& files, QString& fileName)
@@ -343,13 +328,12 @@ void CommandsExec::searhPathFile(QDir dir, QStringList& files, QString& fileName
         {
             continue;
         }
-        searhPathFile(QDir(dir.absoluteFilePath(subdir)), files, fileName);      //Рекурсивный вызов метода
+        searhPathFile(QDir(dir.absoluteFilePath(subdir)), files, fileName);
     }
 }
 
 void CommandsExec::findAndSelectFileByQDir(QString fileName)
 {
-    //Поиск файла по заданному пути только по имени
     while (fileName[0] == "-"
            || fileName[0] == " "
            || fileName[0] == "."
@@ -361,12 +345,10 @@ void CommandsExec::findAndSelectFileByQDir(QString fileName)
             || fileName[fileName.size()-1] == ".") {
         fileName = fileName.remove(fileName.size()-1, 1);
     }
-    //Чтобы поиск осуществлялся только по названию файла, без указания расширения, нужно поставить * после имени файла
     fileName += "*";
     qDebug() << "Запуск поиска файла" << fileName;
     listFiles.clear();
     searhPathFile(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation), listFiles, fileName);
-//    searhPathFile(QDir("C:/Users/<user>/Desktop"), listFiles, fileName);  //открытие диска и поиск файла
     QApplication::processEvents(QEventLoop::AllEvents);
 
     tempList.clear();
@@ -385,8 +367,6 @@ void CommandsExec::findAndSelectFileByQDir(QString fileName)
     if (!tempList.isEmpty()) {
         firstFindFile = tempList.at(0);
     }
-
-    //Открываем проводник и выделяем 1-ый найденный файл по заданному пути
     arguments.clear();
     arguments << QLatin1String("/select,");
     arguments << QDir::toNativeSeparators(tempList.at(0));
