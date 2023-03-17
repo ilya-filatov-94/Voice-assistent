@@ -26,14 +26,7 @@ private:
     QStringList points;
     bool route = false;
     void getPointCoordinates(QString);
-
-    //Key для геокодера яндекс-карт
     QString geoCoderKey;
-
-    /*
-    Пример простого запроса координат
-    https://geocode-maps.yandex.ru/1.x/?apikey=ваш API-ключ&format=json&geocode=Москва,+Тверская+улица,+дом+7
-    */
 
 signals:
 
