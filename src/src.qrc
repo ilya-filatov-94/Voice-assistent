@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/style1.qss</file>
+        <file>res/img/blue_mic.gif</file>
+    </qresource>
+</RCC>

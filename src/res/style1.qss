@@ -1,0 +1,62 @@
+QWidget#widgetWindow
+{
+    background-color: black;
+    color: #ffffff;
+}
+
+QPushButton#start_record
+{
+    background: transparent;
+    border: none;
+}
+
+QLabel {
+    color: #ffffff;
+    font-size: 16px;
+    padding: 5px;
+}
+
+QTextEdit {
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+QPushButton {
+
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgba(0,0,0,0), stop: 0.4 rgba(145,145,145,1), stop: 1 rgba(0,0,0,0));
+    border-radius: 3px;
+    font-size: 16px;
+    padding: 5px;
+    color: #ffffff;
+    border: 1px solid rgba(145,145,145,1);
+}
+
+QPushButton::hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgba(0,0,0,0), stop: 0.4 rgba(145,145,145,0.6), stop: 1 rgba(0,0,0,0));
+}
+
+QPushButton::pressed {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgba(0,0,0,0), stop: 0.4 rgba(145,145,145,0.8), stop: 1 rgba(0,0,0,0));
+}
+
+QPushButton#buttonPartSlider1 {
+    background: rgba(228,228,228,1);
+    border-radius: 15px;
+    font-size: 16px;
+    padding: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: rgba(148,148,148,1);
+    border: 1px solid rgba(145,145,145,1);
+}
+
+QPushButton#buttonPartSlider2 {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 rgba(0,0,0,1), stop: 0.4 rgba(145,145,145,1), stop: 1 rgba(0,0,0,1));
+    border-radius: 15px;
+    font-size: 16px;
+    padding: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #ffffff;
+    border: 1px solid rgba(145,145,145,1);
+}
