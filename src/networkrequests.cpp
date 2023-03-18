@@ -41,9 +41,6 @@ void NetworkRequests::uploadAudioToServer(QString uploadUrl)
     QFile file(filePath);
     QString fileName = filePath.section("/",-1,-1);
 
-//    fileName = fileName.remove(fileName.size()-4, 4);
-//    qDebug() << file.rename(fileName + ".ogg");
-
     if(file.open(QIODevice::ReadOnly)) {
         multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
         QHttpPart fileDataPart;
@@ -52,7 +49,6 @@ void NetworkRequests::uploadAudioToServer(QString uploadUrl)
         fileDataPart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/octet-stream"));
         fileDataPart.setBody(file.readAll());
         multiPart->append(fileDataPart);
-
         QUrl url(uploadUrl);
         QNetworkRequest request(url);
         manager->post(request, multiPart);
@@ -266,101 +262,3 @@ void NetworkRequests::initListOfErrors() {
     listOfStatus.insert("internal_error", "внутренние ошибки используемого API \r\n"
                                           "для распознавания речи");
 }
-
-
-//void NetworkRequests::onResult(QNetworkReply *reply) {
-
-//    if (reply->error())
-//    {
-//        sendStatusProcess("Ошибка запроса к API");
-//    }
-//    else
-//    {
-//        switch (requestProcessingStep) {
-//            case 0: {
-//                QString uploadUrlFile = getUploadUrlAPI(reply);        //1 - получить адрес сервера для загрузки
-//                qDebug() << "адрес сервера " << uploadUrlFile;
-//                if (uploadUrlFile == "") {
-//                    sendStatusProcess("ошибка при запросе Url-адреса API");
-//                    requestUploadUrlAPI(filePath, modelRecognition);
-//                }
-//                else {
-//                    ++requestProcessingStep;
-//                    uploadAudioToServer(uploadUrlFile);                //2 - загрузить аудиозапись по полученному url API
-//                }
-//                break;
-//            }
-//            case 1: {
-//                auto data = QJsonDocument::fromJson(reply->readAll());
-//                qDebug() << "аудиоданные от сервера " << data;
-//                if (listOfError.contains(data["error"]["error_code"].toInt())) {
-//                    requestProcessingStep = 0;
-//                    sendStatusProcess(listOfError.value(data["error"]["error_code"].toInt()));
-//                }
-//                else {
-//                    ++requestProcessingStep;
-//                    getIDforAudioProcessing(data);                     //3 - Получить id задачи на обработку аудио от API
-//                }
-//                break;
-//            }
-//            case 2: {
-//                auto data = QJsonDocument::fromJson(reply->readAll());
-//                qDebug() << "id задачи " << data;
-//                qDebug() << listOfError.contains(data["error"]["error_code"].toInt());
-//                qDebug() << data["error"]["error_code"].toInt();
-//                if (listOfError.contains(data["error"]["error_code"].toInt())) {
-//                    requestProcessingStep = 0;
-//                    sendStatusProcess(listOfError.value(data["error"]["error_code"].toInt()));
-//                }
-//                else {
-//                    task_id = data["response"]["task_id"].toString();
-//                    ++requestProcessingStep;
-//                    startAudioRecognitionProcess(task_id);             //4 - Запустить процесс распознавания аудио на сервере
-//                }
-//                break;
-//            }
-//            case 3: {
-//                    auto data = QJsonDocument::fromJson(reply->readAll());
-//                    qDebug() << data;
-//                    if (listOfError.contains(data["error"]["error_code"].toInt())) {
-//                        requestProcessingStep = 0;
-//                        sendStatusProcess(listOfError.value(data["error"]["error_code"].toInt()));
-//                    }
-//                    if (data["response"]["status"].toString() == "recognition_error") {
-//                        requestProcessingStep = 0;
-//                        sendStatusProcess("ошибка распознавания речи, \r\n"
-//                                          "возможно, мешают фоновые шумы");
-//                    }
-
-//                    if (data["response"]["status"].toString() == "transcoding_error") {
-//                        requestProcessingStep = 0;
-//                        sendStatusProcess("ошибка перекодирования аудиозаписи. \r\n"
-//                                          "Используйте другой формат аудио");
-//                    }
-
-//                    if (data["response"]["status"].toString() == "internal_error") {
-//                        requestProcessingStep = 0;
-//                        sendStatusProcess("внутренние ошибки используемого API \r\n"
-//                                          "для распознавания речи");
-//                    }
-
-//                    if (data["response"]["status"].toString() == "processing") {
-//                        timerOfRetryRequests.setInterval(500);
-//                        timerOfRetryRequests.start();
-//                        sendStatusProcess("выполняется процесс распознавания речи, подождите");
-//                    }
-
-//                    if (data["response"]["status"].toString() == "finished") {
-//                        timerOfRetryRequests.stop();
-//                        requestProcessingStep = 0;
-//                        sendRecognizedSpeech(data["response"]["text"].toString());
-//                    }
-//                    break;
-//            }
-//        }
-//    }
-//}
-
-
-
-
