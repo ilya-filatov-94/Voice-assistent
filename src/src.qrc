@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>res/style1.qss</file>
         <file>res/img/blue_mic.gif</file>
+        <file>res/img/microphone.png</file>
     </qresource>
 </RCC>

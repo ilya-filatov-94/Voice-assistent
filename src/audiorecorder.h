@@ -2,16 +2,14 @@
 #define AUDIORECORDER_H
 
 #include <QObject>
-#include <QAudioProbe>
 #include <QAudioRecorder>
-#include <QAudioBuffer>
-#include <QMediaRecorder>
-#include <QSettings>
 #include <QUrl>
-#include <QStandardPaths>
 #include <QUuid>
 #include <QDir>
 #include <QTimer>
+#include <QProcess>
+#include "audioprobedevice.h"
+
 
 class AudioRecorder : public QObject
 {
@@ -19,34 +17,49 @@ class AudioRecorder : public QObject
 public:
     explicit AudioRecorder(QObject *parent = nullptr);
     ~AudioRecorder();
+    void deleteAudioFiles();
 
 private:
     QAudioRecorder* audioRecorder;
-    QAudioProbe* m_probe;
     QUrl url;
     QString filePath;
-    QFile temporaryFile;
-    const QDir location = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString fileName;
+    QVector<QString> listAudioFiles;
 
-    qreal thresholdOfAudioinputActivation = 5.0;
+    qreal thresholdOfAudioinputActivation;
     bool statusSpeech;
     bool newStatusSpeech;
+    bool statusTrigger;
     QTimer timerOfFinishedSpeech;
 
-    const int intervalRecording = 15000;
-    QTimer voiceCommandWaitTimer;
-    QString modeAudioInput;
+    QString serviceRecognition;
+    QString audioConversionProcess;
+    QProcess* processConvert;
+
+    AudioProbeDevice* audioProbe;
+    QAudioInput* audioSource;
+
+    void setAudioRecorderSettings();
+    void readAudioBuffer();
+    void audioTrigger(bool);
+    void audioConversion();
 
 signals:
 
     void sendPathToAudioFile(QString);
+    void sendStatusProcess(QString);
 
 public slots:
 
     void toggleRecord(bool);
-    void processBuffer(const QAudioBuffer&);
+    void changeServiceRecognition(QString);
+    void setPathToFFMPEG(QString);
+
+private slots:
+
+    void processBuffer(QAudioBuffer);
     void timeoutOfSpeech();
-    void restartWaitTimer();
+    void resultProcess(int, QProcess::ExitStatus);
 };
 
 #endif // AUDIORECORDER_H

@@ -21,21 +21,27 @@ private:
 
     QNetworkAccessManager* manager;
 
-    QString startPointString;
-    QString finishPointString;
-    QStringList points;
     bool route = false;
+    QString pointPosition;
+    QString startPointString, finishPointString;
+    QString startCoordinates, finishCoordinates;
     void getPointCoordinates(QString);
     QString geoCoderKey;
 
+    void weatherRequestCorrection(QString&);
+    void initListOfErrors();
+    QMap<QString, QString> listOfErrors;
+
 signals:
 
+    void sendStatusError(QString);
     void sendPointForWeather(QString);
     void sendPointsForRoute(QString, QString);
 
 public slots:
 
     void getCoordinates(QString, QString);
+    void setYandexGeoToken(QString);
 
 private slots:
 

@@ -4,6 +4,7 @@ GeocoderYandexAPI::GeocoderYandexAPI(QObject *parent) : QObject(parent)
 {
     manager = new QNetworkAccessManager(this);
     connect(manager, &QNetworkAccessManager::finished, this, &GeocoderYandexAPI::onResult, Qt::QueuedConnection);
+    initListOfErrors();
 }
 
 GeocoderYandexAPI::~GeocoderYandexAPI()
@@ -15,12 +16,7 @@ void GeocoderYandexAPI::getCoordinates(QString address, QString typeRequest)
 {
     if (typeRequest == "weather") {
         route = false;
-        while (address[0] == "-"
-               || address[0] == " "
-               || address[0] == "."
-               || address[0] == ",") {
-            address = address.remove(0, 1);
-        }
+        weatherRequestCorrection(address);
         getPointCoordinates(address);
     }
 
@@ -29,13 +25,26 @@ void GeocoderYandexAPI::getCoordinates(QString address, QString typeRequest)
         QStringList points = address.split(" до ");
         startPointString = points.at(0);
         finishPointString = points.at(1);
+        startCoordinates = "";
+        finishCoordinates = "";
         getPointCoordinates(startPointString);
+    }
+}
 
-
-
-        qDebug() << "Старт" << points.at(0);
-        qDebug() << "Финиш" << points.at(1);
-//        getPointCoordinates("Москва, Тверская семь");
+void GeocoderYandexAPI::weatherRequestCorrection(QString &query)
+{
+    while (query[0] == "-"
+           || query[0] == " "
+           || query[0] == "."
+           || query[0] == ",") {
+        query = query.remove(0, 1);
+    }
+    int length = query.size();
+    while (query[length-1] == "-"
+           || query[length-1] == " "
+           || query[length-1] == "."
+           || query[length-1] == ",") {
+        query = query.remove(length-1, 1);
     }
 }
 
@@ -54,28 +63,59 @@ void GeocoderYandexAPI::getPointCoordinates(QString address)
     manager->get(request);
 }
 
+
 void GeocoderYandexAPI::onResult(QNetworkReply *reply)
-{
-    if (!reply->error()) {
-        QJsonDocument data = QJsonDocument::fromJson(reply->readAll());
-        points << data["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]["Point"]["pos"].toString();
+{    
+    bool error = false;
+    QJsonDocument data = QJsonDocument::fromJson(reply->readAll());
+    if (reply->error()) {
+        error = true;
+        if (listOfErrors.contains(data["error"].toString())) {
+            sendStatusError(listOfErrors.value(data["error"].toString()));
+        }
+        else {
+            sendStatusError(data["message"].toString());
+        }
+    }
+
+    if (!error) {
+        pointPosition = data["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]["Point"]["pos"].toString();
 
         if (!route) {
-            route = false;
-            sendPointForWeather(points.at(0));
+            sendPointForWeather(pointPosition);
         }
-        if (route && points.size() < 2) {
-//            getPointCoordinates("Москва, Тверская 7");
-            getPointCoordinates(finishPointString);
-            qDebug() << points.at(0);
-        }
-        if (route && points.size() == 2) {
-            route = false;
-            qDebug() << points.at(1);
-            sendPointsForRoute(points.at(0), points.at(1));
+
+        if (route) {
+            if (startCoordinates != "" && finishCoordinates =="") {
+                finishCoordinates = pointPosition;
+                if (finishCoordinates !="") {
+                    route = false;
+                    sendPointsForRoute(startCoordinates, finishCoordinates);
+                }
+                else {
+                    getPointCoordinates(finishPointString);
+                }
+            }
+            if (startCoordinates == "" && finishCoordinates =="") {
+                startCoordinates = pointPosition;
+                if (startCoordinates !="") {
+                    getPointCoordinates(finishPointString);
+                }
+                else {
+                    getPointCoordinates(startPointString);
+                }
+            }
         }
     }
-    else {
-        qDebug() << QJsonDocument::fromJson(reply->readAll());
-    }
+}
+
+void GeocoderYandexAPI::setYandexGeoToken(QString token)
+{
+    geoCoderKey = token;
+}
+
+void GeocoderYandexAPI::initListOfErrors()
+{
+    listOfErrors.insert("Bad Request", "Синтаксическая ошибка в запросе к API геокодера");
+    listOfErrors.insert("Forbidden", "Ошибка авторизации в API геокодера");
 }

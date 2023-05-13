@@ -18,6 +18,6 @@ int main(int argc, char *argv[])
     QApplication::setStyle(QStyleFactory::create("Fusion"));
     MainWindow w;
     w.show();
-
+    w.readData();
     return a.exec();
 }

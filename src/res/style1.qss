@@ -60,3 +60,5 @@ QPushButton#buttonPartSlider2 {
     color: #ffffff;
     border: 1px solid rgba(145,145,145,1);
 }
+
+

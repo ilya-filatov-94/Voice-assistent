@@ -20,7 +20,6 @@ SliderButton::SliderButton(const QString &offParameter, const QString &onParamet
 
     btn1->setGeometry(0, 0, width1+width2-20, height+4);
     btn2->setGeometry(width1-20, 2, width2, height);
-
     setMinimumSize(width1+width2-10, height+6);
     setMaximumSize(width1+width2, height+6);
 }
@@ -31,9 +30,14 @@ SliderButton::~SliderButton()
     delete btn2;
 }
 
+int SliderButton::getSizeBtn()
+{
+    return height+4;
+}
+
 void SliderButton::changeStateSlider()
 {
-    stateSlider = !stateSlider;
+    stateSlider = !stateSlider;     
     if (stateSlider) {
         btn2->setGeometry(0, 2, width1, height);
         btn1->setGeometry(0, 0, width1+width2-20, height+4);

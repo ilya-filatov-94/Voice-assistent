@@ -1,64 +1,74 @@
 #include "audiorecorder.h"
 
+
+
 AudioRecorder::AudioRecorder(QObject *parent) : QObject(parent)
 {
     audioRecorder = new QAudioRecorder(this);
-    m_probe = new QAudioProbe(this);
-    connect(m_probe, &QAudioProbe::audioBufferProbed, this, &AudioRecorder::processBuffer);
-    m_probe->setSource(audioRecorder);
-
+    setAudioRecorderSettings();
+    audioProbe = new AudioProbeDevice(this);
+    readAudioBuffer();
     statusSpeech = false;
-    newStatusSpeech = true;
+    newStatusSpeech = false;
+    statusTrigger = false;
+    thresholdOfAudioinputActivation = 40.0;
     timerOfFinishedSpeech.setInterval(2000);
     connect(&timerOfFinishedSpeech, &QTimer::timeout, this, &AudioRecorder::timeoutOfSpeech);
-
-    voiceCommandWaitTimer.setInterval(intervalRecording);
-    connect(&voiceCommandWaitTimer, &QTimer::timeout, this, &AudioRecorder::restartWaitTimer);
-
-    modeAudioInput = "voiceStandby";
 }
 
 AudioRecorder::~AudioRecorder()
 {
     delete audioRecorder;
-    delete m_probe;
+    delete audioProbe;
+    delete audioSource;
 }
 
-void AudioRecorder::toggleRecord(bool commandRecord)
+void AudioRecorder::readAudioBuffer()
+{
+    QAudioDeviceInfo inputDevice = QAudioDeviceInfo::defaultInputDevice();
+    audioProbe->setCurrentReadChannel(inputDevice.supportedChannelCounts().at(0));
+    connect(audioProbe, &AudioProbeDevice::audioAvailable, this, &AudioRecorder::processBuffer);
+    QAudioFormat format;
+    format.setSampleRate(16000);
+    format.setChannelCount(1);
+    format.setSampleSize(8);
+    format.setCodec("audio/pcm");
+    format.setByteOrder(QAudioFormat::LittleEndian);
+    format.setSampleType(QAudioFormat::UnSignedInt);
+    audioSource = new QAudioInput(inputDevice, format, this);
+    audioSource->setBufferSize(32);
+}
+
+void AudioRecorder::setAudioRecorderSettings()
 {
     QAudioEncoderSettings audioSettings;
     audioSettings.setCodec("audio/x-flac");
     audioSettings.setSampleRate(16000);
+    audioSettings.setBitRate(96000);
+    audioSettings.setChannelCount(1);
     audioSettings.setQuality(QMultimedia::VeryHighQuality);
-    QString container = "Default";  //.wav
+    audioSettings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
     audioRecorder->setEncodingSettings(audioSettings);
-
-//    QAudioEncoderSettings settings;
-//    settings.setCodec("audio/x-vorbis");
-//    settings.setSampleRate(16000);
-//    settings.setBitRate(64000);
-//    settings.setChannelCount(1);
-//    settings.setQuality(QMultimedia::VeryHighQuality);
-//    settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
-//    QString container = "audio/ogg";
-//    audioRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
-
-    QString fileName = QUuid::createUuid().toString();
-    filePath=QDir::currentPath();
+    fileName = QUuid::createUuid().toString();
+    filePath = QDir::currentPath();
     filePath += "/" + fileName;
     audioRecorder->setOutputLocation(QUrl::fromLocalFile(filePath));
+    listAudioFiles << filePath;
+}
 
-    modeAudioInput = "voiceStandby";
+void AudioRecorder::toggleRecord(bool commandRecord)
+{
     if (commandRecord) {
-        audioRecorder->record();
-        temporaryFile.setFileName(fileName);
-        voiceCommandWaitTimer.start();
+        audioProbe->open(QIODevice::WriteOnly);
+        audioSource->start(audioProbe);
     }
     if (!commandRecord) {
+        audioSource->stop();
+        audioProbe->close();
+
         audioRecorder->stop();
-        voiceCommandWaitTimer.stop();
         timerOfFinishedSpeech.stop();
-        temporaryFile.remove();
+        deleteAudioFiles();
     }
 }
 
@@ -102,7 +112,6 @@ qreal getPeakValue(const QAudioFormat& format)
             return qreal(UCHAR_MAX);
         break;
     }
-
     return qreal(0);
 }
 
@@ -110,7 +119,6 @@ qreal getPeakValue(const QAudioFormat& format)
 QVector<qreal> getBufferLevels(const QAudioBuffer& buffer)
 {
     QVector<qreal> values;
-
     if (!buffer.format().isValid() || buffer.format().byteOrder() != QAudioFormat::LittleEndian)
         return values;
 
@@ -153,7 +161,6 @@ QVector<qreal> getBufferLevels(const QAudioBuffer& buffer)
             values[i] /= peak_value;
         break;
     }
-
     return values;
 }
 template <class T>
@@ -172,11 +179,11 @@ QVector<qreal> getBufferLevels(const T *buffer, int frames, int channels)
     return max_values;
 }
 
-void AudioRecorder::processBuffer(const QAudioBuffer& buffer)
+void AudioRecorder::processBuffer(QAudioBuffer buffer)
 {
     QVector<qreal> levels = getBufferLevels(buffer);
     for (int i = 0; i < levels.count(); ++i) {
-        if (levels.at(i)*10.0 < thresholdOfAudioinputActivation) {
+        if (levels.at(i)*100.0 < thresholdOfAudioinputActivation) {
             statusSpeech = false;
         }
         else {
@@ -190,25 +197,77 @@ void AudioRecorder::processBuffer(const QAudioBuffer& buffer)
     if (statusSpeech && !newStatusSpeech) {
         newStatusSpeech = statusSpeech;
         timerOfFinishedSpeech.stop();
-        voiceCommandWaitTimer.stop();
+        audioTrigger(true);
+    }
+}
+
+void AudioRecorder::audioTrigger(bool detectVoice)
+{
+    if (statusTrigger && !detectVoice) {
+        statusTrigger= false;
+        audioRecorder->stop();
+    }
+    if (!statusTrigger && detectVoice) {
+        statusTrigger= true;
+        setAudioRecorderSettings();
+        audioRecorder->record();
+        sendStatusProcess("аудиозапись речи");
     }
 }
 
 void AudioRecorder::timeoutOfSpeech()
 {
     timerOfFinishedSpeech.stop();
-    voiceCommandWaitTimer.stop();
-    audioRecorder->stop();
-    modeAudioInput = "speechRecording";
-    sendPathToAudioFile(filePath);
-    restartWaitTimer();
+    audioTrigger(false);
+    if (serviceRecognition == "yandex") {
+        audioConversion();
+    }
+    if (serviceRecognition == "vkAPI") {
+        sendPathToAudioFile(filePath);
+    }
 }
 
-void AudioRecorder::restartWaitTimer()
+void AudioRecorder::changeServiceRecognition(QString currentService)
 {
-    audioRecorder->stop();
-    if (modeAudioInput == "voiceStandby") {
-        temporaryFile.remove();
+    serviceRecognition = currentService;
+}
+
+void AudioRecorder::setPathToFFMPEG(QString ffmpeg)
+{
+    audioConversionProcess = ffmpeg.replace(" ", "");
+}
+
+void AudioRecorder::audioConversion()
+{
+    QString pathToAudio;
+    QStringList arguments;
+    pathToAudio = filePath + ".wav";
+    pathToAudio.replace("/", "\\");
+    arguments << "-i" << pathToAudio << "-ar" << "48000" << "-t" << "8";
+    pathToAudio = filePath + ".ogg";
+    pathToAudio.replace("/", "\\");
+    arguments << pathToAudio;
+
+    processConvert = new QProcess(this);
+    connect(processConvert, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(resultProcess(int, QProcess::ExitStatus)));
+    processConvert->start(audioConversionProcess, arguments);
+}
+
+void AudioRecorder::resultProcess(int exitCode, QProcess::ExitStatus status)
+{
+    if (exitCode == 0 && status == QProcess::NormalExit) {
+        QFile::remove(fileName + ".wav");
+        sendPathToAudioFile(filePath + ".ogg");
     }
-    toggleRecord(true);
+    disconnect(processConvert, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(resultProcess(int, QProcess::ExitStatus)));
+    delete processConvert;
+}
+
+void AudioRecorder::deleteAudioFiles()
+{
+    for (QString item: listAudioFiles) {
+        if (QFile::exists(item + ".wav")) QFile::remove(item + ".wav");
+        if (QFile::exists(item + ".ogg")) QFile::remove(item + ".ogg");
+    }
+    listAudioFiles.clear();
 }

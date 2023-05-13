@@ -4,12 +4,14 @@
 #include <QWidget>
 #include <QPushButton>
 
+
 class SliderButton : public QWidget
 {
     Q_OBJECT
 public:
     explicit SliderButton(const QString &offParameter, const QString &onParameter, QWidget *parent = nullptr);
     ~SliderButton();
+    int getSizeBtn();
 
 private:
 
