@@ -71,10 +71,10 @@ void GeocoderYandexAPI::onResult(QNetworkReply *reply)
     if (reply->error()) {
         error = true;
         if (listOfErrors.contains(data["error"].toString())) {
-            sendStatusError(listOfErrors.value(data["error"].toString()));
+            emit sendStatusError(listOfErrors.value(data["error"].toString()));
         }
         else {
-            sendStatusError(data["message"].toString());
+            emit sendStatusError(data["message"].toString());
         }
     }
 
@@ -82,7 +82,7 @@ void GeocoderYandexAPI::onResult(QNetworkReply *reply)
         pointPosition = data["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]["Point"]["pos"].toString();
 
         if (!route) {
-            sendPointForWeather(pointPosition);
+            emit sendPointForWeather(pointPosition);
         }
 
         if (route) {
@@ -90,7 +90,7 @@ void GeocoderYandexAPI::onResult(QNetworkReply *reply)
                 finishCoordinates = pointPosition;
                 if (finishCoordinates !="") {
                     route = false;
-                    sendPointsForRoute(startCoordinates, finishCoordinates);
+                    emit sendPointsForRoute(startCoordinates, finishCoordinates);
                 }
                 else {
                     getPointCoordinates(finishPointString);

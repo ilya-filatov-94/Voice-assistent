@@ -7,7 +7,7 @@ AudioRecorder::AudioRecorder(QObject *parent) : QObject(parent)
     audioRecorder = new QAudioRecorder(this);
     setAudioRecorderSettings();
     audioProbe = new AudioProbeDevice(this);
-    readAudioBuffer();
+    setAudioBufferSettings();
     statusSpeech = false;
     newStatusSpeech = false;
     statusTrigger = false;
@@ -23,7 +23,7 @@ AudioRecorder::~AudioRecorder()
     delete audioSource;
 }
 
-void AudioRecorder::readAudioBuffer()
+void AudioRecorder::setAudioBufferSettings()
 {
     QAudioDeviceInfo inputDevice = QAudioDeviceInfo::defaultInputDevice();
     audioProbe->setCurrentReadChannel(inputDevice.supportedChannelCounts().at(0));
@@ -241,11 +241,10 @@ void AudioRecorder::audioConversion()
 {
     QString pathToAudio;
     QStringList arguments;
+    filePath.replace("/", "\\");
     pathToAudio = filePath + ".wav";
-    pathToAudio.replace("/", "\\");
     arguments << "-i" << pathToAudio << "-ar" << "48000" << "-t" << "8";
     pathToAudio = filePath + ".ogg";
-    pathToAudio.replace("/", "\\");
     arguments << pathToAudio;
 
     processConvert = new QProcess(this);

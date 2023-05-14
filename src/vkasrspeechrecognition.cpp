@@ -31,7 +31,7 @@ void VkASRspeechRecognition::requestUploadUrlAPI(QString path, QString mode)
 
 QString VkASRspeechRecognition::getUploadUrlAPI(QNetworkReply* reply)
 {
-    auto data = QJsonDocument::fromJson(reply->readAll());
+    QJsonDocument data = QJsonDocument::fromJson(reply->readAll());
     return data["response"]["upload_url"].toString();
 }
 
@@ -57,7 +57,7 @@ void VkASRspeechRecognition::uploadAudioToServer(QString uploadUrl)
         file.remove();
     }
     else {
-        sendStatusProcess("Ошибка открытия файла");
+        emit sendStatusProcess("Ошибка открытия файла");
         return;
     }
 }
@@ -106,7 +106,7 @@ void VkASRspeechRecognition::onResult(QNetworkReply *reply) {
     if (reply->error()) {
         error = true;
         timerOfRetryRequests.stop();
-        sendStatusError("Ошибка запроса к API");
+        emit sendStatusError("Ошибка запроса к API");
     }
 
     if (!reply->error() && requestProcessingStep != 0) {
@@ -114,7 +114,7 @@ void VkASRspeechRecognition::onResult(QNetworkReply *reply) {
         if (listOfError.contains(data["error"]["error_code"].toInt())) {
             error = true;
             timerOfRetryRequests.stop();
-            sendStatusError(listOfError.value(data["error"]["error_code"].toInt()));
+            emit sendStatusError(listOfError.value(data["error"]["error_code"].toInt()));
         }
     }
 
@@ -123,7 +123,7 @@ void VkASRspeechRecognition::onResult(QNetworkReply *reply) {
             case 0: {
                 QString uploadUrlFile = getUploadUrlAPI(reply);        //1 - получить адрес сервера для загрузки
                 if (uploadUrlFile == "") {
-                    sendStatusProcess("ошибка при запросе Url-адреса API");
+                    emit sendStatusProcess("ошибка при запросе Url-адреса API");
                 }
                 else {
                     ++requestProcessingStep;
@@ -145,18 +145,18 @@ void VkASRspeechRecognition::onResult(QNetworkReply *reply) {
             case 3: {
                     if (listOfStatus.contains(data["response"]["status"].toString())) {
                         timerOfRetryRequests.stop();
-                        sendStatusError(listOfStatus.value(data["response"]["status"].toString()));
+                        emit sendStatusError(listOfStatus.value(data["response"]["status"].toString()));
                     }
 
                     if (data["response"]["status"].toString() == "processing") {
                         timerOfRetryRequests.setInterval(500);
                         timerOfRetryRequests.start();
-                        sendStatusProcess("выполняется процесс распознавания речи, подождите");
+                        emit sendStatusProcess("выполняется процесс распознавания речи, подождите");
                     }
 
                     if (data["response"]["status"].toString() == "finished") {
                         timerOfRetryRequests.stop();
-                        sendRecognizedSpeech(data["response"]["text"].toString());
+                        emit sendRecognizedSpeech(data["response"]["text"].toString());
                     }
                     break;
             }

@@ -1,8 +1,4 @@
 #include "mainwindow.h"
-//#include <stdio.h>
-//#include <string.h>
-
-//#include <QApplication>
 
 
 
@@ -14,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setCentralWidget(widgetWindow);
 
     dataMapper = new Datamapper(this);
+    networkAccess = new NetworkAccess(this);
+    connect(networkAccess, &NetworkAccess::sendStatusNetworkConnection, this, &MainWindow::errorInternetConnection);
+
     recorder = new AudioRecorder(this);
     statusRecord = false;
     changingServiceSlider(true);
@@ -57,6 +56,7 @@ MainWindow::~MainWindow()
     delete yaSpeechRec;
     delete assistant;
     delete dataMapper;
+    delete networkAccess;
     delete widgetWindow;
 }
 
@@ -131,12 +131,12 @@ void MainWindow::startRecord()
     if (statusRecord) {
         movie->start();
         setServiceRecognition(serviceRecognition);
-        commandRecord(true);
+        emit commandRecord(true);
         header_textArea->setText(tr("Статус: ожидание голосовой команды"));
     }
     else {
         movie->stop();
-        commandRecord(false);
+        emit commandRecord(false);
         header_textArea->setText(tr("Статус: нажмите на изображение микрофона чтобы \r\n"
                                     "активировать голосовой ввод команд"));
     }
@@ -152,18 +152,14 @@ void MainWindow::clearTextArea()
     textArea->clear();
 }
 
-//Добавить проверку наличия активного интернет-соединения при запуске приложения и вот здесь
-//Перед отправкой аудио в web API распознавания речи
-//Если ошибка, то выдавать сообщение: "Ошибка. Проверьте наличие интернет соединения"
-//Приложение использует интернет-соединение для распознавания речи, построения маршрутов и показа погоды
 void MainWindow::getPathToAudioFile(QString filePath)
 {
     header_textArea->setText(tr("Статус: запущено распознавание речи"));
     if (serviceRecognition == "yandex") {
-        postRequestToYandexAPI(filePath);
+        emit postRequestToYandexAPI(filePath);
     }
     if (serviceRecognition == "vkAPI") {
-        postRequestToVkAPI(filePath, modelRecognition);
+        emit postRequestToVkAPI(filePath, modelRecognition);
     }
 }
 
@@ -174,9 +170,16 @@ void MainWindow::updateStatusProcess(QString newStatus)
 
 void MainWindow::speechRecognitionError(QString errorMessage)
 {
-    header_textArea->setText(tr("Статус: ") + errorMessage);
+    if (errorMessage == "") {
+        header_textArea->setText(tr("Статус: Ошибка! Проверьте соединение с интернетом!"));
+        QString errorStr("Ошибка! Проверьте соединение с интернетом!");
+        showMessageBoxErrorCommand(errorStr);
+    }
+    else {
+        header_textArea->setText(tr("Статус: ") + errorMessage);
+        showMessageBoxErrorCommand(errorMessage);
+    }
     recorder->deleteAudioFiles();
-    showMessageBoxErrorCommand(errorMessage);
 }
 
 void MainWindow::getRecognizedSpeech(QString speechToText)
@@ -184,7 +187,7 @@ void MainWindow::getRecognizedSpeech(QString speechToText)
     header_textArea->setText(tr("Статус: распознавание успешно выполнено"));
     textArea->append(speechToText);
     recorder->deleteAudioFiles();
-    requestCommand(speechToText);
+    emit requestCommand(speechToText);
 }
 
 void MainWindow::changingModeSlider(bool currentMode)
@@ -203,13 +206,13 @@ void MainWindow::changingServiceSlider(bool currentService)
         serviceRecognition = "yandex";
         btn_modeSelection->setVisible(false);
         labelMode->setText(tr("                           "));
-        setServiceRecognition(serviceRecognition);
+        emit setServiceRecognition(serviceRecognition);
     }
     if (!currentService) {
         serviceRecognition = "vkAPI";
         btn_modeSelection->setVisible(true);
         labelMode->setText(tr("Модель распознавания речи: "));
-        setServiceRecognition(serviceRecognition);
+        emit setServiceRecognition(serviceRecognition);
     }
 }
 
@@ -222,12 +225,29 @@ void MainWindow::readData()
         QMessageBox* msg = new QMessageBox(QMessageBox::Critical, tr("Ошибка!"), (tr("Приложение не может работать без отсутствующей "
                                                                                      "базы данных токенов!")));
         msg->setStyleSheet("color: black");
-        if (msg->exec()==QMessageBox::Ok) delete msg;
-        this->close();
-        exit(1);
+        if (msg->exec()==QMessageBox::Ok) {
+            delete msg;
+            this->close();
+            exit(1);
+        }
     }
-    sendVkSpeechToken(parameters[0]);
-    sendYandexSpeechToken(parameters[1]);
-    sendYandexGeoToken(parameters[2]);
-    sendPathToFFMPEG(parameters[3]);
+    emit sendVkSpeechToken(parameters[0]);
+    emit sendYandexSpeechToken(parameters[1]);
+    emit sendYandexGeoToken(parameters[2]);
+    emit sendPathToFFMPEG(parameters[3]);
+    networkAccess->checkNetworkConnection();
+}
+
+void MainWindow::errorInternetConnection(bool status)
+{
+    if (!status) {
+        QMessageBox* msg = new QMessageBox(QMessageBox::Critical, tr("Ошибка!"), (tr("Отсутствует интернет соединение! \r\n"
+                                                                                     "Приложение использует интернет-соединение \r\n"
+                                                                                     "для распознавания речи, построения маршрутов \r\n"
+                                                                                     "и показа погоды")));
+        msg->setStyleSheet("color: black");
+        if (msg->exec()==QMessageBox::Ok) {
+            delete msg;
+        }
+    }
 }

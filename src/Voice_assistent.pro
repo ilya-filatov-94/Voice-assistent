@@ -33,6 +33,7 @@ SOURCES += \
         geocoderyandexapi.cpp \
         main.cpp \
         mainwindow.cpp \
+        networkaccess.cpp \
         sliderbutton.cpp \
         vkasrspeechrecognition.cpp \
         yandexspeechrecognition.cpp
@@ -44,6 +45,7 @@ HEADERS += \
         datamapper.h \
         geocoderyandexapi.h \
         mainwindow.h \
+        networkaccess.h \
         sliderbutton.h \
         vkasrspeechrecognition.h \
         yandexspeechrecognition.h
@@ -56,4 +58,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     src.qrc
 
-RC_ICONS = "microphone_new.ico"
+RC_ICONS = "application.ico"

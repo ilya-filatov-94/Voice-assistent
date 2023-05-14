@@ -16,6 +16,7 @@
 #include "commandsexec.h"
 #include "yandexspeechrecognition.h"
 #include "datamapper.h"
+#include "networkaccess.h"
 
 
 #include <QDebug>
@@ -56,6 +57,7 @@ private:
     CommandsExec* assistant;
     QSqlDatabase db;
     Datamapper* dataMapper;
+    NetworkAccess* networkAccess;
 
     void createUserInterface();
     void showMessageBoxErrorCommand(QString&);
@@ -66,6 +68,7 @@ public slots:
     void updateStatusProcess(QString);
     void speechRecognitionError(QString);
     void getRecognizedSpeech(QString);
+    void errorInternetConnection(bool);
 
 private slots:
 

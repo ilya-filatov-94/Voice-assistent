@@ -38,15 +38,15 @@ void YandexSpeechRecognition::onResult(QNetworkReply *reply)
     if (reply->error()) {
         error = true;
         if (listOfErrors.contains(data["error_code"].toString())) {
-            sendStatusError(listOfErrors.value(data["error_code"].toString()));
+            emit sendStatusError(listOfErrors.value(data["error_code"].toString()));
         }
         else {
-            sendStatusError(data["error_message"].toString());
+            emit sendStatusError(data["error_message"].toString());
         }
     }
 
     if (!error) {
-        sendRecognizedSpeech(data["result"].toString());
+        emit sendRecognizedSpeech(data["result"].toString());
     }
 }
 

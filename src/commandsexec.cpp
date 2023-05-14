@@ -47,14 +47,14 @@ void CommandsExec::choose_action(QString requestStr)
         //Построй маршрут от ... до ...
         notRepeat = true;
         requestStr = requestStr.toLower().replace(command, "");
-        sendAddress(requestStr, typeOfRequest);
+        emit sendAddress(requestStr, typeOfRequest);
     }
 
     if (typeOfRequest == "weather" && !notRepeat) {
         //Покажи погоду в ....
         notRepeat = true;
         requestStr = requestStr.toLower().replace(command, "");
-        sendAddress(requestStr, typeOfRequest);
+        emit sendAddress(requestStr, typeOfRequest);
     }
 
     if (typeOfRequest == "requestToDir" && !notRepeat) {
@@ -62,7 +62,7 @@ void CommandsExec::choose_action(QString requestStr)
         requestStr = requestStr.toLower().replace(command,"");
         notRepeat = true;
         findAndSelectFileByQDir(requestStr);
-        sendStatusProcess("ожидание голосовой команды");
+        emit sendStatusProcess("ожидание голосовой команды");
     }
 
     if (typeOfRequest == "requestExplorerSearch" && !notRepeat) {
@@ -70,7 +70,7 @@ void CommandsExec::choose_action(QString requestStr)
         requestStr = requestStr.toLower().replace(command,"");
         notRepeat = true;
         findFileInExplorer(requestStr);
-        sendStatusProcess("ожидание голосовой команды");
+        emit sendStatusProcess("ожидание голосовой команды");
     }
 
     if (typeOfRequest == "openFolder" && !notRepeat) {
@@ -78,7 +78,7 @@ void CommandsExec::choose_action(QString requestStr)
         requestStr = requestStr.toLower().replace(command,"");
         notRepeat = true;
         openFolderByName(requestStr);
-        sendStatusProcess("ожидание голосовой команды");
+        emit sendStatusProcess("ожидание голосовой команды");
     }
 
     if (typeOfRequest == "openFile" && !notRepeat) {
@@ -87,28 +87,28 @@ void CommandsExec::choose_action(QString requestStr)
         //Открытие выделенного файла по имени, например:
         //после того как был произведён его поиск и он был найден
         openSelectFileBySearchPath(firstFindFile);
-        sendStatusProcess("ожидание голосовой команды");
+        emit sendStatusProcess("ожидание голосовой команды");
     }
 
     if (typeOfRequest == "minimizeActiveWindow" && !notRepeat) {
         //Окно свери...
         notRepeat = true;
         minimizeActiveWindow();
-        sendStatusProcess("ожидание голосовой команды");
+        emit sendStatusProcess("ожидание голосовой команды");
     }
 
     if (typeOfRequest == "closeWindow" && !notRepeat) {
         //Закрой окно... (активное)
         notRepeat = true;
         closeActiveWindow();
-        sendStatusProcess("ожидание голосовой команды");
+        emit sendStatusProcess("ожидание голосовой команды");
     }
 
     if (typeOfRequest == "openResource" && !notRepeat) {
         //открой гугл, открой яндекс, открой гугл диск, открой гугл переводчик, открой ютуб и тд
         notRepeat = true;
         openInternetResource(url);
-        sendStatusProcess("ожидание голосовой команды");
+        emit sendStatusProcess("ожидание голосовой команды");
     }
 
     if (typeOfRequest == "requestToSearch" && !notRepeat) {
@@ -116,11 +116,11 @@ void CommandsExec::choose_action(QString requestStr)
         requestStr = requestStr.toLower().replace(command,"");
         notRepeat = true;
         searchTheInternet(requestStr, url);
-        sendStatusProcess("ожидание голосовой команды");
+        emit sendStatusProcess("ожидание голосовой команды");
     }
 
     if (command == "") {
-        sendErrorToMainWindow(tr("Ошибка! Запрошенная команда не найдена!"));
+        emit sendErrorToMainWindow(tr("Ошибка! Запрошенная команда не найдена!"));
     }
 }
 
@@ -247,7 +247,7 @@ void CommandsExec::openInternetResource(QString& url)
 void CommandsExec::sendErrorfromCommand(QString errorMessage)
 {
     notRepeat = false;
-    sendErrorToMainWindow(errorMessage);
+    emit sendErrorToMainWindow(errorMessage);
 }
 
 void CommandsExec::buildRoute(QString start, QString finish)
@@ -277,7 +277,7 @@ void CommandsExec::buildRoute(QString start, QString finish)
     arguments << "--chrome-frame" << "-kiosk" << urlRoute;
     notRepeat = false;
     execProcess->start(pathBrowser, arguments);
-    sendStatusProcess("ожидание голосовой команды");
+    emit sendStatusProcess("ожидание голосовой команды");
 }
 
 void CommandsExec::openYandexWeather(QString location)
@@ -294,7 +294,7 @@ void CommandsExec::openYandexWeather(QString location)
     arguments << "--chrome-frame" << "-kiosk" << url;
     notRepeat = false;
     execProcess->start(pathBrowser, arguments);
-    sendStatusProcess("ожидание голосовой команды");
+    emit sendStatusProcess("ожидание голосовой команды");
 }
 
 void CommandsExec::openFolderByName(QString folderName)
@@ -425,7 +425,7 @@ void CommandsExec::findAndSelectFileByQDir(QString fileName)
 {
     requestCorrection(fileName);
     //Чтобы поиск осуществлялся только по названию файла, без указания расширения, нужно поставить * после имени файла
-    sendStatusProcess("запущен поиска файла " + fileName);
+    emit sendStatusProcess("запущен поиска файла " + fileName);
     fileName += "*";
     listFiles.clear();
     searhPathFile(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation), listFiles, fileName);

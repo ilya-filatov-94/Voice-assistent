@@ -44,7 +44,7 @@ void SliderButton::changeStateSlider()
         btn1->setText(label2);
         btn1->setStyleSheet("text-align: right;");
         btn2->setText(label1);
-        currentState(false);
+        emit currentState(false);
     }
     else {
         btn1->setGeometry(0, 0, width1+width2-20, height+4);
@@ -52,6 +52,6 @@ void SliderButton::changeStateSlider()
         btn1->setText(label1);
         btn1->setStyleSheet("text-align: left;");
         btn2->setText(label2);
-        currentState(true);
+        emit currentState(true);
     }
 }

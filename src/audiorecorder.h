@@ -40,7 +40,7 @@ private:
     QAudioInput* audioSource;
 
     void setAudioRecorderSettings();
-    void readAudioBuffer();
+    void setAudioBufferSettings();
     void audioTrigger(bool);
     void audioConversion();
 
