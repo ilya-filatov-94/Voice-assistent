@@ -77,6 +77,7 @@ void MainWindow::createUserInterface()
 
     //Остальные виджеты
     btn_commandList = new QPushButton(tr("Список доступных команд"), this);
+    connect(btn_commandList, &QPushButton::clicked, this, &MainWindow::showReference);
     header_textArea = new QLabel(tr("Статус: нажмите на изображение микрофона чтобы \r\n"
                                     "активировать голосовой ввод команд"), this);
     textArea = new QTextEdit(this);
@@ -236,6 +237,7 @@ void MainWindow::readData()
     emit sendYandexGeoToken(parameters[2]);
     emit sendPathToFFMPEG(parameters[3]);
     networkAccess->checkNetworkConnection();
+    loadReference();
 }
 
 void MainWindow::errorInternetConnection(bool status)
@@ -250,4 +252,21 @@ void MainWindow::errorInternetConnection(bool status)
             delete msg;
         }
     }
+}
+
+void MainWindow::loadReference()
+{
+    QFile file(":/res/reference.html");
+    if (file.open(QIODevice::ReadOnly)) {
+        temporaryFile.setFileTemplate("XXXXXX.html");
+        if (temporaryFile.open()) {
+            temporaryFile.write(file.readAll());
+            file.close();
+        }
+    }
+}
+
+void MainWindow::showReference()
+{
+    desktopService.openUrl(QUrl::fromLocalFile(temporaryFile.fileName()));
 }

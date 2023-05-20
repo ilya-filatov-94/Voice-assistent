@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Справочник голосовых команд Voice assistent</title>
+    <meta name="keywords" content="voice assisent, reference, documentation">
+    <meta name="description" content="Справочник голосовых команд Voice assistent">
+    <link rel="icon" href="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/main/src/application.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header class="header">
+            <div class="container">
+                <div class="header-wrapper">
+                    <div class="header-main item">
+                        <a href="#main" class="logo header__logo">
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/main/src/res/img/microphone.png"
+                                alt="Logo: Microphone" class="logo__img">
+                        </a>
+                        <h1 class="main__title">Справочник голосовых команд</h1>
+                    </div>
+                    <div class="header-contact item">
+                        <a href="mailto:ilya-filatov-1994@mail.ru">ilya-filatov-1994@mail.ru</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="feature-block">
+            <ul class="feature-list">
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Построение маршрутов на карте
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может открыть карту в браузере Chrome
+                            и проложить маршрут с учётом пробок на дорогах.<br>
+                            По умолчанию, используется проезд на общественном транспорте.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите голосовую команду:
+                            <span class="feature-item__command">
+                                Построй маршрут от [начальная точка] до [точка назначения].
+                            </span>
+                        </p>
+                        <p class="feature-item__description">
+                            По-возможности, произносите адреса подробно.
+                            Пример: "Построй маршрут от Москва Тверская 5 до Москва Тверская 7".
+                        </p>
+                    </div>
+                </li>
+
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Отображение прогноза погоды
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может открыть сайта сервиса
+                            яндекс.погода в браузере Chrome с прогнозом на день
+                            текущей даты.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите голосовую команду:
+                            <span class="feature-item__command">
+                                Покажи погоду в городе [название города в именительном падеже].
+                            </span>
+                        </p>
+                        <p class="feature-item__description">
+                            Пример: "Покажи погоду в городе Санкт-Петербург".
+                        </p>
+                    </div>
+                </li>
+
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Поиск файла на рабочем столе компьютера
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может выполнить поиск файла 
+                            только по имени на рабочем столе компьютера и
+                            открыть проводник с выделенным найденным файлом.
+                            На данный момент возможен поиск файлов только
+                            с наименованием на русском языке.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите голосовую команду:
+                            <span class="feature-item__command">
+                                Найди файл на рабочем столе по имени [название файла на русском без расширения].
+                            </span>
+                        </p>
+                        <p class="feature-item__description">
+                            Пример: "Найди файл на рабочем столе по имени резюме".
+                        </p>
+                    </div>
+                </li>
+
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Открытие найденного файла
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может открыть файл, найденный 
+                            с помощью голосовой команды, указанный выше в руководстве.
+                            Открытие производится программой по умолчанию для данного типа файла.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите голосовую команду:
+                            <span class="feature-item__command">
+                                Открой файл [название файла на русском без расширения].
+                            </span>
+                        </p>
+                        <p class="feature-item__description">
+                            Пример: "Открой файл резюме".
+                        </p>
+                    </div>
+                </li>
+
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Закрытие активного окна
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может закрыть активное окно,
+                            (например, файла или проводника), с которым в данный момент
+                            работает пользователь.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите голосовую команду:<br>
+                            <span class="feature-item__command">
+                                Закрой окно.<br>
+                                Закрой файл.
+                            </span>
+                        </p>
+                    </div>
+                </li>
+
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Сворачивание активного окна
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может свернуть активное окно,
+                            (например, файла или проводника), с которым в данный момент
+                            работает пользователь.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите голосовую команду:<br>
+                            <span class="feature-item__command">
+                                Сверни окно.<br>
+                                Окно сверни.
+                            </span>
+                        </p>
+                    </div>
+                </li>
+
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Поиск файлов определённого типа на рабочем столе
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может выполнить поиск файлов 
+                            определённого типа на рабочем столе.
+                            Например, найти все файлы расширения jpeg или png (все фотографии),
+                            или расширения docx и pdf (все документы),
+                            или расширения mp4 и MOV (все видео) и отобразить их в проводнике.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите одну из голосовых команд:<br>
+                            <span class="feature-item__command">
+                                Покажи в проводнике [все фотографии] с рабочего стола.<br>
+                                Покажи в проводнике [все документы] с рабочего стола.<br>
+                                Покажи в проводнике [все видео] с рабочего стола.<br>
+                            </span>
+                        </p>
+                    </div>
+                </li>
+
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Открытие интернет-ресурса в браузере
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может открыть в браузере Chrome 
+                            следующие сайты: 
+                            <a href="https://www.google.com/"> google.com</a>,
+                            <a href="https://yandex.ru/"> yandex.ru</a>,
+                            <a href="https://www.youtube.com/"> youtube.com</a>,
+                            также может открыть 
+                            <a href="https://translate.google.ru/"> google-диск</a> и 
+                            <a href="https://drive.google.com/"> google-переводчик</a>.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите одну из следующих голосовых команд:
+                            <span class="feature-item__command">
+                                Открой [открой поиск гугл],<br>
+                                Открой [открой яндекс],<br>
+                                Открой [открой google диск],<br>
+                                Открой [открой google переводчик],<br>
+                                Открой [открой youtube],<br>
+                            </span>
+                        </p>
+                    </div>
+                </li>
+
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Поиск в поисковых системах интернета
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может открыть в браузере Chrome 
+                            поисковые системы: 
+                            <a href="https://www.google.com/"> google.com</a>,
+                            <a href="https://yandex.ru/"> yandex.ru</a>,
+                            <a href="https://www.youtube.com/"> youtube.com </a>,
+                            и выполнить в них поиск по голосовой команде.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите одну из следующих голосовых команд:<br>
+                            <span class="feature-item__command">
+                                Поиск (или найди) в google [поисковой запрос]<br>
+                                Поиск (или найди) в яндексе  [поисковой запрос]<br>
+                                Найди в youtube видео  [поисковой запрос].
+                            </span>
+                        </p>
+                        <p class="feature-item__description">
+                            Пример: "Найди в google фото птиц".
+                        </p>
+                    </div>
+                </li>
+
+                <li class="feature__item">
+                    <button type="button" class="feature__link">
+                        <div class="feature-item-wrap">
+                            <h2 class="feature-item__title">
+                                Закрытие активной вкладки в Chrome
+                            </h2>
+                            <img src="https://raw.githubusercontent.com/ilya-filatov-94/Voice-assistent/e838dea5c437386074cae7a1a31f0dc0d8e6769f/src/res/img/arrowdown.svg"
+                                class="arrowDown" alt="Стрелка списка вниз/вверх" width="25px" height="25px">
+                        </div>
+                    </button>
+                    <div class="feature-description-wrap hidden">
+                        <p class="feature-item__description">
+                            Голосовой помощник может закрыть активную вкладку в браузере Chrome
+                            по голосовой команде.
+                        </p>
+                        <p class="feature-item__description">
+                            Произнесите голосовую команду:<br>
+                            <span class="feature-item__command">
+                                Закрой активную вкладку.
+                            </span>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </main>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        
+            * {
+                margin: 0;
+                padding: 0;
+            }
+        
+            body {
+                margin: 0 auto;
+                max-width: 1200px;
+                font-size: 16px;
+                font-family: 'Roboto', sans-serif;
+                font-weight: normal;
+                background: #fff;
+                color: #0f141e;
+            }
+        
+            .container {
+                max-width: 1200px;
+                margin: auto;
+                padding-top: 30px;
+                padding-bottom: 50px;
+            }
+        
+            h1 {
+                font-size: 2em;
+                margin: 0.67em 0;
+            }
+        
+            img {
+                border-style: none;
+            }
+        
+            .header {
+                margin-bottom: 30px;
+            }
+        
+            .header-wrapper {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                justify-content: flex-end;
+                gap: 17%;
+            }
+        
+            .header-main {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                justify-content: center;
+            }
+        
+            .header__logo {
+                display: block;
+                margin-right: 15px;
+            }
+        
+            .logo__img {
+                width: 40px;
+                height: 40px;
+            }
+        
+            .header-contact {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                justify-content: center;
+            }
+        
+            .feature-list {
+                max-width: 1100px;
+                list-style-type: none;
+            }
+        
+            .feature__link {
+                color: #000;
+                background-color: transparent;
+                border: none;
+                width: 100%;
+                cursor: pointer;
+                outline: none;
+            }
+        
+            .arrowDown {
+                padding-top: 2px;
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+        
+            .arrowUp {
+                padding-bottom: 2px;
+                -webkit-transform: rotate(180deg);
+                transform: rotate(180deg);
+            }
+        
+            .feature__item {
+                margin-bottom: 10px;
+            }
+        
+            .feature-item-wrap {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                justify-content: space-between;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+            }
+        
+            .feature-item__title {
+                font-size: 24px;
+                line-height: 1.6;
+            }
+        
+            .feature-item__description,
+            .feature-item__command {
+                opacity: 0.8;
+                font-size: 18px;
+                line-height: 1.6;
+            }
+        
+            .feature-item__description:first-child {
+                text-indent: 1.2em;
+            }
+        
+            .feature-item__command {
+                font-weight: bolder;
+            }
+        
+            .hidden {
+                display: none;
+            }
+        
+        
+            a {
+                color: #000;
+                text-decoration: none;
+            }
+        
+            a:hover {
+                text-decoration: underline;
+            }
+        
+            a:active {
+                color: blue;
+            }
+        
+            a:visited {
+                color: grey;
+            }
+        </style>
+
+        <script>
+            const accordion = () => {
+                const listBtns = document.querySelectorAll('.feature__link');
+                const listCommands = document.querySelectorAll('.feature-description-wrap');
+        
+                listBtns.forEach((btn, index) => {
+                    btn.addEventListener('click', () => {
+                        listCommands[index].classList.toggle('hidden');
+                        btn.children[0].children[1].classList.toggle('arrowDown');
+                        btn.children[0].children[1].classList.toggle('arrowUp');
+                    });
+                });
+            };
+        
+            accordion();
+        </script>
+</body>
+</html>
+

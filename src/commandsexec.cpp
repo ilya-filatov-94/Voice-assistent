@@ -119,6 +119,13 @@ void CommandsExec::choose_action(QString requestStr)
         emit sendStatusProcess("ожидание голосовой команды");
     }
 
+    if (typeOfRequest == "closeTabBrowser" && !notRepeat) {
+        //Закрой активную вкладку
+        notRepeat = true;
+        closeActiveTabBrowser();
+        emit sendStatusProcess("ожидание голосовой команды");
+    }
+
     if (command == "") {
         emit sendErrorToMainWindow(tr("Ошибка! Запрошенная команда не найдена!"));
     }
@@ -145,6 +152,7 @@ void CommandsExec::initListOfRequests()
     listOfRequests.insert("Открой гугл", {"openResource", "https://www.google.com/"});
     listOfRequests.insert("открой поиск google", {"openResource", "https://www.google.com/"});
     listOfRequests.insert("открой google поиск", {"openResource", "https://www.google.com/"});
+    listOfRequests.insert("открой google", {"openResource", "https://www.google.com/"});
 
     listOfRequests.insert("открой гугл диск", {"openResource", "https://drive.google.com/"});
     listOfRequests.insert("открой google диск", {"openResource", "https://drive.google.com/"});
@@ -200,6 +208,8 @@ void CommandsExec::initListOfRequests()
 
     listOfRequests.insert("закрой окно", {"closeWindow", ""});
     listOfRequests.insert("закрой файл", {"closeWindow", ""});
+
+    listOfRequests.insert("закрой активную вкладку", {"closeTabBrowser", ""});
 }
 
 void CommandsExec::resendGeoToken(QString token)
@@ -241,7 +251,7 @@ void CommandsExec::openInternetResource(QString& url)
     arguments.clear();
     arguments << "--chrome-frame" << "-kiosk" << url;
     notRepeat = false;
-    execProcess->start(pathBrowser, arguments);
+    execProcess->start(pathBrowser, arguments);     
 }
 
 void CommandsExec::sendErrorfromCommand(QString errorMessage)
@@ -340,7 +350,49 @@ void CommandsExec::closeActiveWindow()
         PostMessage(hWnd, WM_CLOSE, 0, 0);
     #else
         sendErrorToMainWindow("На текущий момент, данная голосовая команда \r\n"
-                          "доступна только на ОС Windows");
+                                "доступна только на ОС Windows");
+    #endif
+}
+
+void CommandsExec::closeActiveTabBrowser()
+{
+    //Закрой активную вкладку (браузера Chrome)
+    #ifdef Q_OS_WIN
+        //Закрыть активную вкладку chrome: Ctrl + W
+        //0x57 - windows virtual-key code for the "W" key
+        //VK_CONTROL - windows virtual-key code for CTRL key
+        INPUT key_CTRL_down;
+        key_CTRL_down.type = INPUT_KEYBOARD;
+        key_CTRL_down.ki.wVk = VK_CONTROL;
+        key_CTRL_down.ki.dwFlags = 0;
+        key_CTRL_down.ki.time = 0;
+
+        INPUT key_W_down;
+        key_W_down.type = INPUT_KEYBOARD;
+        key_W_down.ki.wVk = 0x57;
+        key_W_down.ki.dwFlags = 0;
+        key_W_down.ki.time = 0;
+
+        INPUT key_CTRL_up;
+        key_CTRL_up.type = INPUT_KEYBOARD;
+        key_CTRL_up.ki.wVk = VK_CONTROL;
+        key_CTRL_up.ki.dwFlags = KEYEVENTF_KEYUP;
+        key_CTRL_up.ki.time = 0;
+
+        INPUT key_W_up;
+        key_W_up.type = INPUT_KEYBOARD;
+        key_W_up.ki.wVk = 0x57;
+        key_W_up.ki.dwFlags = KEYEVENTF_KEYUP;
+        key_W_up.ki.time = 0;
+
+        SendInput(1, &key_CTRL_down, sizeof(key_CTRL_down));
+        SendInput(1, &key_W_down, sizeof(key_W_down));
+        SendInput(1, &key_CTRL_up, sizeof(key_CTRL_up));
+        SendInput(1, &key_W_up, sizeof(key_W_up));
+        notRepeat = false;
+    #else
+        sendErrorToMainWindow("На текущий момент, данная голосовая команда \r\n"
+                                "доступна только на ОС Windows");
     #endif
 }
 

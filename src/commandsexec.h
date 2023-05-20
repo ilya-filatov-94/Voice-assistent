@@ -45,6 +45,7 @@ private:
     void requestCorrection(QString&);
     void searchTheInternet(QString&, QString&);
     void openInternetResource(QString&);
+    void closeActiveTabBrowser();
     void sendErrorfromCommand(QString);
     void buildRoute(QString, QString);
     void openYandexWeather(QString);

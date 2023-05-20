@@ -58,9 +58,12 @@ private:
     QSqlDatabase db;
     Datamapper* dataMapper;
     NetworkAccess* networkAccess;
+    QDesktopServices desktopService;
+    QTemporaryFile temporaryFile;
 
     void createUserInterface();
     void showMessageBoxErrorCommand(QString&);
+    void loadReference();
 
 public slots:
 
@@ -77,6 +80,7 @@ private slots:
     void changingModeSlider(bool);
     void startRecord();
     void clearTextArea();
+    void showReference();
 
 signals:
 
