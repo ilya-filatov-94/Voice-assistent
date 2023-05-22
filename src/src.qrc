@@ -4,5 +4,7 @@
         <file>res/img/blue_mic.gif</file>
         <file>res/img/microphone.png</file>
         <file>res/reference.html</file>
+        <file>res/img/lock_closed.png</file>
+        <file>res/img/lock_open.png</file>
     </qresource>
 </RCC>

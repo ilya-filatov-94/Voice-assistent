@@ -75,3 +75,56 @@ QString Datamapper::decryptAES(QByteArray& text, QByteArray& key, QByteArray& iv
     return decodedString;
 }
 
+QByteArray Datamapper::encryptAES(QString inputStr, QByteArray& key, QByteArray& iv)
+{
+    QAESEncryption encryption(QAESEncryption::AES_256, QAESEncryption::CBC);
+    QByteArray hashKey = QCryptographicHash::hash(key, QCryptographicHash::Sha256);
+    QByteArray hashIV = QCryptographicHash::hash(iv, QCryptographicHash::Md5);
+    QByteArray encodeText = encryption.encode(inputStr.toLocal8Bit(), hashKey, hashIV);
+    return encodeText;
+}
+
+bool Datamapper::writeDataSQL(QSqlDatabase& db, QSqlQuery& query, int id, QString& nameParameter, QString& valueParameter)
+{
+    QByteArray data1, data2, key, vector;
+    generateKey(key, vector);
+    data1 = encryptAES(nameParameter, key, vector);
+    data2 = encryptAES(valueParameter, key, vector);
+    if (!writeDataSQL_query(db, query, id, data1, data2)) {
+        query.clear();
+        return false;
+    }
+    query.clear();
+    return true;
+}
+
+bool Datamapper::writeDataSQL_query(QSqlDatabase& db, QSqlQuery& query, int id, QByteArray nameParameter, QByteArray valueParameter)
+{
+    if (!db.tables().contains(QLatin1String("datatable"))) {
+        query.exec("create table datatable (id int primary key, name nvarchar(150), parameter nvarchar(700))");
+    }
+    query.exec(QString("select exists (select name, parameter from datatable where id = '%1');").arg(id));
+    query.next();
+    if (query.value(0) !=0) {
+        query.prepare(QString("update datatable set name=?, parameter=? where id ='%1'").arg(id));
+        query.addBindValue(nameParameter);
+        query.addBindValue(valueParameter);
+        if (!query.exec()) {
+            query.clear();
+            return false;
+        }
+    }
+    else {
+        query.prepare("insert into datatable (id, name, parameter) values (?, ?, ?)");
+        query.addBindValue(id);
+        query.addBindValue(nameParameter);
+        query.addBindValue(valueParameter);
+        if (!query.exec()) {
+            query.clear();
+            return false;
+        }
+    }
+    query.clear();
+    return true;
+}
+

@@ -17,6 +17,7 @@
 #include "yandexspeechrecognition.h"
 #include "datamapper.h"
 #include "networkaccess.h"
+#include "settingswindow.h"
 
 
 #include <QDebug>
@@ -33,7 +34,7 @@ public:
 private:
     QWidget* widgetWindow;
     QVBoxLayout* vertical_layout;
-    QPushButton* btn_commandList;
+    QPushButton* btn_settings;
     QPushButton* toggle_record;
     QMovie* movie;
     QLabel* header_textArea;
@@ -58,12 +59,11 @@ private:
     QSqlDatabase db;
     Datamapper* dataMapper;
     NetworkAccess* networkAccess;
-    QDesktopServices desktopService;
-    QTemporaryFile temporaryFile;
+    SettingsWindow* setingsWindow;
 
     void createUserInterface();
     void showMessageBoxErrorCommand(QString&);
-    void loadReference();
+    void showSettings(bool);
 
 public slots:
 
@@ -80,7 +80,7 @@ private slots:
     void changingModeSlider(bool);
     void startRecord();
     void clearTextArea();
-    void showReference();
+    void showSettingsWindow();
 
 signals:
 
@@ -88,6 +88,7 @@ signals:
     void sendVkSpeechToken(QString);
     void sendYandexSpeechToken(QString);
     void sendYandexGeoToken(QString);
+    void sendSettingsData(QString, QString, QString, QString);
 
     void commandRecord(bool);
     void setServiceRecognition(QString);

@@ -34,6 +34,7 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         networkaccess.cpp \
+        settingswindow.cpp \
         sliderbutton.cpp \
         vkasrspeechrecognition.cpp \
         yandexspeechrecognition.cpp
@@ -46,6 +47,7 @@ HEADERS += \
         geocoderyandexapi.h \
         mainwindow.h \
         networkaccess.h \
+        settingswindow.h \
         sliderbutton.h \
         vkasrspeechrecognition.h \
         yandexspeechrecognition.h

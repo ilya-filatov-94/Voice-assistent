@@ -42,6 +42,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(assistant, &CommandsExec::sendErrorToMainWindow, this, &MainWindow::speechRecognitionError);
     connect(assistant, &CommandsExec::sendStatusProcess, this, &MainWindow::updateStatusProcess);
 
+    setingsWindow = new SettingsWindow(this);
+    connect(setingsWindow, &SettingsWindow::showMainWindow, this, &MainWindow::showSettings);
+    connect(this, &MainWindow::sendSettingsData, setingsWindow, &SettingsWindow::getSettingsData);
+    showSettings(false);
+
     setWindowTitle(tr("Голосовой помощник"));
     setWindowIcon(QIcon(":/res/img/microphone.png"));
     setMinimumSize(520, 810);
@@ -57,6 +62,7 @@ MainWindow::~MainWindow()
     delete assistant;
     delete dataMapper;
     delete networkAccess;
+    delete setingsWindow;
     delete widgetWindow;
 }
 
@@ -76,8 +82,8 @@ void MainWindow::createUserInterface()
     toggle_record->setIcon(movie->currentPixmap());
 
     //Остальные виджеты
-    btn_commandList = new QPushButton(tr("Список доступных команд"), this);
-    connect(btn_commandList, &QPushButton::clicked, this, &MainWindow::showReference);
+    btn_settings = new QPushButton(tr("Настройки | Справка"), this);
+    connect(btn_settings, &QPushButton::clicked, this, &MainWindow::showSettingsWindow);
     header_textArea = new QLabel(tr("Статус: нажмите на изображение микрофона чтобы \r\n"
                                     "активировать голосовой ввод команд"), this);
     textArea = new QTextEdit(this);
@@ -96,7 +102,7 @@ void MainWindow::createUserInterface()
     //Компоновка виджетов
     vertical_layout = new QVBoxLayout();
     vertical_layout->setMargin(7);
-    vertical_layout->addWidget(btn_commandList, Qt::AlignCenter);
+    vertical_layout->addWidget(btn_settings, Qt::AlignCenter);
     vertical_layout->addWidget(toggle_record, Qt::AlignCenter);
     vertical_layout->addWidget(header_textArea, Qt::AlignCenter);
     vertical_layout->addWidget(textArea, Qt::AlignCenter);
@@ -228,16 +234,14 @@ void MainWindow::readData()
         msg->setStyleSheet("color: black");
         if (msg->exec()==QMessageBox::Ok) {
             delete msg;
-            this->close();
-            exit(1);
         }
     }
     emit sendVkSpeechToken(parameters[0]);
     emit sendYandexSpeechToken(parameters[1]);
     emit sendYandexGeoToken(parameters[2]);
     emit sendPathToFFMPEG(parameters[3]);
+    emit sendSettingsData(parameters[0], parameters[1], parameters[2], parameters[3]);
     networkAccess->checkNetworkConnection();
-    loadReference();
 }
 
 void MainWindow::errorInternetConnection(bool status)
@@ -254,19 +258,20 @@ void MainWindow::errorInternetConnection(bool status)
     }
 }
 
-void MainWindow::loadReference()
+void MainWindow::showSettingsWindow()
 {
-    QFile file(":/res/reference.html");
-    if (file.open(QIODevice::ReadOnly)) {
-        temporaryFile.setFileTemplate("XXXXXX.html");
-        if (temporaryFile.open()) {
-            temporaryFile.write(file.readAll());
-            file.close();
-        }
-    }
+    showSettings(true);
 }
 
-void MainWindow::showReference()
+void MainWindow::showSettings(bool visible)
 {
-    desktopService.openUrl(QUrl::fromLocalFile(temporaryFile.fileName()));
+    if (visible) {
+        setingsWindow->setWindowFlags(Qt::WindowStaysOnTopHint);
+        setingsWindow->setWindowFlags(Qt::FramelessWindowHint);
+        setingsWindow->resize(520, 810);
+        setingsWindow->setVisible(true);
+    }
+    if (!visible) {
+        setingsWindow->setVisible(false);
+    }
 }

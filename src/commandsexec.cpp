@@ -187,8 +187,10 @@ void CommandsExec::initListOfRequests()
 
     listOfRequests.insert("найди в ютуб", {"requestToSearch", "https://www.youtube.com/results?search_query="});
     listOfRequests.insert("найди в ютуб-видео", {"requestToSearch", "https://www.youtube.com/results?search_query="});
+    listOfRequests.insert("найди на ютуб-видео", {"requestToSearch", "https://www.youtube.com/results?search_query="});
     listOfRequests.insert("найди в youtube", {"requestToSearch", "https://www.youtube.com/results?search_query="});
     listOfRequests.insert("найди в youtube видео", {"requestToSearch", "https://www.youtube.com/results?search_query="});
+    listOfRequests.insert("найди на youtube видео", {"requestToSearch", "https://www.youtube.com/results?search_query="});
 
     listOfRequests.insert("найди файл по имени на рабочем столе", {"requestToDir", ""});
     listOfRequests.insert("найди файл на рабочем столе по имени", {"requestToDir", ""});
@@ -204,6 +206,7 @@ void CommandsExec::initListOfRequests()
     listOfRequests.insert("открой файл", {"openFile", ""});
 
     listOfRequests.insert("сверни окно", {"minimizeActiveWindow", ""});
+    listOfRequests.insert("верни окно", {"minimizeActiveWindow", ""});
     listOfRequests.insert("окно сверни", {"minimizeActiveWindow", ""});
 
     listOfRequests.insert("закрой окно", {"closeWindow", ""});

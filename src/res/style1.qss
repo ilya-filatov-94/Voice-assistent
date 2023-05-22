@@ -16,6 +16,11 @@ QLabel {
     padding: 5px;
 }
 
+QLineEdit {
+    font-size: 16px;
+    padding: 5px;
+}
+
 QTextEdit {
     font-size: 16px;
     border-radius: 5px;
