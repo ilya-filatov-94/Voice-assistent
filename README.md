@@ -3,7 +3,7 @@
 ### Requirements
 
 * Operation system: **Windows** (support for other systems in future)
-* Browser for open internet-resources: **Google Chrome**
+* Browser for opening internet-resources: **Google Chrome**
 
 ### Assistant Skills 
 *   **Build a routes on map taking into account traffic jams** (Used web version of Yandex Maps)
