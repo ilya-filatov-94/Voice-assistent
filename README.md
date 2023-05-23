@@ -28,7 +28,6 @@ In the future, the processing of voice commands will be expanded.
 ## Getting Started
 ### Create KEYs for third party APIs
 Voice assistant uses third party APIs for speech recognition, building routes and weather forecasting.
-All the following APIs have free no-commercial API calls. Subscribe to the following APIs in order to take FREE access KEYs.
 *   [VK ASR API](https://vk.com/voice-tech): free API for speech recognition.
 *   [Yandex SpeechKit](https://cloud.yandex.ru/docs/speechkit/): paid API with a free period of 2 months for speech recognition.
 *   [Yandex GeoCoder](https://yandex.ru/dev/maps/geocoder/?from=mapsapi): API for current location and buildin routes.
