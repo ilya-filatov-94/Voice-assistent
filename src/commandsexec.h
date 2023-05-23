@@ -57,9 +57,13 @@ private:
     void searhPathFile(QDir, QStringList&, QString&);
     void findAndSelectFileByQDir(QString);
 
+
 public slots:
     void resendGeoToken(QString);
     void choose_action(QString);
+
+private slots:
+    void resultProcess(int, QProcess::ExitStatus);
 
 };
 

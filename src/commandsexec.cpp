@@ -3,6 +3,7 @@
     #include "windows.h"
 #endif
 
+
 CommandsExec::CommandsExec(QObject *parent) : QObject(parent)
 {
     execProcess = new QProcess(this);
@@ -196,6 +197,10 @@ void CommandsExec::initListOfRequests()
     listOfRequests.insert("найди файл на рабочем столе по имени", {"requestToDir", ""});
     listOfRequests.insert("найди на рабочем столе файл по имени", {"requestToDir", ""});
     listOfRequests.insert("найди на рабочем столе файл", {"requestToDir", ""});
+    listOfRequests.insert("найти файл по имени на рабочем столе", {"requestToDir", ""});
+    listOfRequests.insert("найти файл на рабочем столе по имени", {"requestToDir", ""});
+    listOfRequests.insert("найти на рабочем столе файл по имени", {"requestToDir", ""});
+    listOfRequests.insert("найти на рабочем столе файл", {"requestToDir", ""});
 
     listOfRequests.insert("покажи в проводнике", {"requestExplorerSearch", ""});
 
@@ -327,6 +332,14 @@ void CommandsExec::openSelectFileBySearchPath(QString path)
     requestCorrection(path);
     if (!path.isEmpty()) {
         desktopService.openUrl(QUrl::fromLocalFile(path));
+        #ifdef Q_OS_WIN
+            Sleep(500);
+            QString handler = path.section("/",-1,-1);
+            std::wstring mWstring = handler.toStdWString();
+            HWND hWnd = FindWindow(nullptr, mWstring.c_str());
+            SwitchToThisWindow(hWnd, TRUE);
+            BringWindowToTop(hWnd);
+        #endif
     }
     notRepeat = false;
 }
@@ -479,7 +492,6 @@ void CommandsExec::searhPathFile(QDir dir, QStringList& files, QString& fileName
 void CommandsExec::findAndSelectFileByQDir(QString fileName)
 {
     requestCorrection(fileName);
-    //Чтобы поиск осуществлялся только по названию файла, без указания расширения, нужно поставить * после имени файла
     emit sendStatusProcess("запущен поиска файла " + fileName);
     fileName += "*";
     listFiles.clear();
@@ -489,10 +501,10 @@ void CommandsExec::findAndSelectFileByQDir(QString fileName)
     QString tempPath;
     foreach (QString item, listFiles) {
         QString tempFile;
-        if (item.contains("C:/", Qt::CaseInsensitive) == true) {
+        if (item.contains("C:/", Qt::CaseInsensitive)) {
             tempPath = item;
         }
-        if (item.contains("C:/", Qt::CaseInsensitive) == false) {
+        else {
             tempFile = tempPath + "/" + item;
             tempList << tempFile;
         }
@@ -505,5 +517,21 @@ void CommandsExec::findAndSelectFileByQDir(QString fileName)
     arguments << QLatin1String("/select,");
     arguments << QDir::toNativeSeparators(tempList.at(0));
     execProcess->start("explorer", arguments);
+    connect(execProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(resultProcess(int, QProcess::ExitStatus)));
+}
+
+
+void CommandsExec::resultProcess(int, QProcess::ExitStatus)
+{
+    #ifdef Q_OS_WIN
+        QString str = "Рабочий стол";
+        Sleep(500);
+        std::wstring mWstring = str.toStdWString();
+        HWND hWnd = FindWindow(nullptr, mWstring.c_str());
+        SwitchToThisWindow(hWnd, TRUE);
+        BringWindowToTop(hWnd);
+    #endif
+    disconnect(execProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(resultProcess(int, QProcess::ExitStatus)));
     notRepeat = false;
 }
+
