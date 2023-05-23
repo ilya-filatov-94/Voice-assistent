@@ -23,7 +23,7 @@
 In the future, the processing of voice commands will be expanded.
 
 ## Demo
-[VK ASR API](https://vk.com/voice-tech)  
+![Demo gif](https://github.com/ilya-filatov-94/Voice-assistent/blob/main/presentation_app/gif_demonstration.gif)  
 
 ## Getting Started
 ### Create KEYs for third party APIs
