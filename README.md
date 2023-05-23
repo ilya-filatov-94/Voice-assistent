@@ -13,12 +13,12 @@
 *   **Close the active window or file with a voice command**
 *   **Minimize the active window or file with a voice command**
 *   **Search for files of a certain type on the computer desktop** (For example, all jpg or png, all pdf or word, all mov or mp4 files.
-*   **Open Internet resources** (such as google.com, yandex.ru, youtube.com, drive.google.com, translate.google.ru)
-*   **Make a search query in the Google search engine**
-*   **Make a search query in the Yandex search engine**
-*   **Make a search query in the Youtube search engine**
-*   **Close active browser tab on command**
-*   **Writes the history of voice commands in the current time**  
+*   **Opening Internet resources** (such as google.com, yandex.ru, youtube.com, drive.google.com, translate.google.ru)
+*   **Making a search query in the Google search engine**
+*   **Making a search query in the Yandex search engine**
+*   **Making a search query in the Youtube search engine**
+*   **Closing active browser tab on command**
+*   **Writing the history of voice commands in the current time**  
 
 In the future, the processing of voice commands will be expanded.
 
@@ -32,7 +32,7 @@ Voice assistant uses third party APIs for speech recognition, building routes an
 *   [Yandex SpeechKit](https://cloud.yandex.ru/docs/speechkit/): paid API with a free period of 2 months for speech recognition.
 *   [Yandex GeoCoder](https://yandex.ru/dev/maps/geocoder/?from=mapsapi): API for current location and buildin routes.
 
-Since the speech recognition APIs accept the ogg audio format, you will need to install the library to convert the audio.  
+Since the speech recognition APIs accept the ogg audio format, you will need to install the universal media converter to convert the audio.  
 *   [FFmpeg](http://www.ffmpeg.org/download.html).  
 *   This application was compiled using the MinGW 64bit compiler and tested on Windows 10.   
 *   Using building system tool - qmake. 
