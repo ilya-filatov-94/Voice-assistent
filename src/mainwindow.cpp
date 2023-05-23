@@ -229,8 +229,9 @@ void MainWindow::readData()
     db.setDatabaseName("./dataDB.db");
     QVector<QString> parameters;
     if (!dataMapper->readDataSQL(db, parameters)) {
-        QMessageBox* msg = new QMessageBox(QMessageBox::Critical, tr("Ошибка!"), (tr("Приложение не может работать без отсутствующей "
-                                                                                     "базы данных токенов!")));
+        QMessageBox* msg = new QMessageBox(QMessageBox::Critical, tr("Ошибка!"), (tr("Заполните в настройках приложения \r\n"
+                                                                                     "отсутствующие ключи авторизации и \r\n"
+                                                                                     "путь к ffmpeg-конвертеру аудиофайлов")));
         msg->setStyleSheet("color: black");
         if (msg->exec()==QMessageBox::Ok) {
             delete msg;

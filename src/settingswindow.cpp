@@ -57,7 +57,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QWidget(parent)
 
 SettingsWindow::~SettingsWindow()
 {
-    delete vlayout;
+    delete widget;
 }
 
 void SettingsWindow::createInputLines()
