@@ -370,41 +370,28 @@ void CommandsExec::closeActiveWindow()
     #endif
 }
 
+#ifdef Q_OS_WIN
+static void sendInputKeyboard(WORD codeKey, bool pushInput) {
+    INPUT key;
+    key.type = INPUT_KEYBOARD;
+    key.ki.wVk = codeKey;
+    key.ki.dwFlags = pushInput ? 0 : KEYEVENTF_KEYUP;
+    key.ki.time = 0;
+    SendInput(1, &key, sizeof(key));
+}
+#endif
+
 void CommandsExec::closeActiveTabBrowser()
 {
     //Закрой активную вкладку (браузера Chrome)
     #ifdef Q_OS_WIN
         //Закрыть активную вкладку chrome: Ctrl + W
-        //0x57 - windows virtual-key code for the "W" key
         //VK_CONTROL - windows virtual-key code for CTRL key
-        INPUT key_CTRL_down;
-        key_CTRL_down.type = INPUT_KEYBOARD;
-        key_CTRL_down.ki.wVk = VK_CONTROL;
-        key_CTRL_down.ki.dwFlags = 0;
-        key_CTRL_down.ki.time = 0;
-
-        INPUT key_W_down;
-        key_W_down.type = INPUT_KEYBOARD;
-        key_W_down.ki.wVk = 0x57;
-        key_W_down.ki.dwFlags = 0;
-        key_W_down.ki.time = 0;
-
-        INPUT key_CTRL_up;
-        key_CTRL_up.type = INPUT_KEYBOARD;
-        key_CTRL_up.ki.wVk = VK_CONTROL;
-        key_CTRL_up.ki.dwFlags = KEYEVENTF_KEYUP;
-        key_CTRL_up.ki.time = 0;
-
-        INPUT key_W_up;
-        key_W_up.type = INPUT_KEYBOARD;
-        key_W_up.ki.wVk = 0x57;
-        key_W_up.ki.dwFlags = KEYEVENTF_KEYUP;
-        key_W_up.ki.time = 0;
-
-        SendInput(1, &key_CTRL_down, sizeof(key_CTRL_down));
-        SendInput(1, &key_W_down, sizeof(key_W_down));
-        SendInput(1, &key_CTRL_up, sizeof(key_CTRL_up));
-        SendInput(1, &key_W_up, sizeof(key_W_up));
+        //0x57 - windows virtual-key code for the "W" key
+        sendInputKeyboard(VK_CONTROL, true);
+        sendInputKeyboard(0x57, true);
+        sendInputKeyboard(VK_CONTROL, false);
+        sendInputKeyboard(0x57, false);
         notRepeat = false;
     #else
         sendErrorToMainWindow("На текущий момент, данная голосовая команда \r\n"
