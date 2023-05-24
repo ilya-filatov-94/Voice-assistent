@@ -2,7 +2,7 @@
 
 ### Requirements
 
-* Operation system: **Windows** (support for other systems in future)
+* Recommended operation system: **Windows** (cross-platform application, but some commands are implemented only for windows)
 * Browser for opening internet-resources: **Google Chrome**
 
 ### Assistant Skills 
