@@ -41,7 +41,7 @@ signals:
 public slots:
 
     void getCoordinates(QString, QString);
-    void setYandexGeoToken(QString);
+    void setYandexGeoToken(QString&);
 
 private slots:
 

@@ -53,7 +53,7 @@ public slots:
 
     void toggleRecord(bool);
     void changeServiceRecognition(QString);
-    void setPathToFFMPEG(QString);
+    void setPathToFFMPEG(QString&);
 
 private slots:
 

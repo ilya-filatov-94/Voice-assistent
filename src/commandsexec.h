@@ -22,13 +22,6 @@ public:
     explicit CommandsExec(QObject *parent = nullptr);
     ~CommandsExec();
 
-signals:
-
-    void sendAddress(QString, QString);
-    void sendErrorToMainWindow(QString);
-    void sendStatusProcess(QString);
-    void postGeoToken(QString);
-
 private:
     bool notRepeat;
     QProcess* execProcess;
@@ -59,12 +52,17 @@ private:
 
 
 public slots:
-    void resendGeoToken(QString);
     void choose_action(QString);
 
 private slots:
     void resultProcess(int, QProcess::ExitStatus);
 
+signals:
+
+    void sendAddress(QString, QString);
+    void sendErrorToMainWindow(QString);
+    void sendStatusProcess(QString);
+    void postGeoToken(QString&);
 };
 
 #endif // COMMANDSEXEC_H

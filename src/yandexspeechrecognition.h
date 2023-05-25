@@ -35,7 +35,7 @@ signals:
 
 public slots:
     void postAudioToAPI(QString);
-    void setYandexSpeechToken(QString);
+    void setYandexSpeechToken(QString&);
 
 private slots:
     void onResult(QNetworkReply* reply);

@@ -164,7 +164,7 @@ void VkASRspeechRecognition::onResult(QNetworkReply *reply) {
     }
 }
 
-void VkASRspeechRecognition::setVkSpeechToken(QString token)
+void VkASRspeechRecognition::setVkSpeechToken(QString& token)
 {
     serviceKey = token;
 }

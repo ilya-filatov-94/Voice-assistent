@@ -109,7 +109,7 @@ void GeocoderYandexAPI::onResult(QNetworkReply *reply)
     }
 }
 
-void GeocoderYandexAPI::setYandexGeoToken(QString token)
+void GeocoderYandexAPI::setYandexGeoToken(QString& token)
 {
     geoCoderKey = token;
 }

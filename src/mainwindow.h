@@ -72,23 +72,22 @@ public slots:
     void speechRecognitionError(QString);
     void getRecognizedSpeech(QString);
     void errorInternetConnection(bool);
+    void updateSettings(QVector<QString>&);
 
 private slots:
 
-    void setButtonIcon();
     void changingServiceSlider(bool);
     void changingModeSlider(bool);
     void startRecord();
     void clearTextArea();
-    void showSettingsWindow();
 
 signals:
 
-    void sendPathToFFMPEG(QString);
-    void sendVkSpeechToken(QString);
-    void sendYandexSpeechToken(QString);
-    void sendYandexGeoToken(QString);
-    void sendSettingsData(QString, QString, QString, QString);
+    void sendPathToFFMPEG(QString&);
+    void sendVkSpeechToken(QString&);
+    void sendYandexSpeechToken(QString&);
+    void sendYandexGeoToken(QString&);
+    void sendSettingsData(QVector<QString>&);
 
     void commandRecord(bool);
     void setServiceRecognition(QString);

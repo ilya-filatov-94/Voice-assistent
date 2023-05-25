@@ -232,7 +232,7 @@ void AudioRecorder::changeServiceRecognition(QString currentService)
     serviceRecognition = currentService;
 }
 
-void AudioRecorder::setPathToFFMPEG(QString ffmpeg)
+void AudioRecorder::setPathToFFMPEG(QString& ffmpeg)
 {
     audioConversionProcess = ffmpeg.replace(" ", "");
 }

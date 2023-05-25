@@ -17,14 +17,14 @@ public:
     explicit Datamapper(QObject *parent = nullptr);
     ~Datamapper();
     bool readDataSQL(QSqlDatabase&, QVector<QString>&);
-    bool writeDataSQL(QSqlDatabase&, QSqlQuery&, int, QString&, QString&);
+    bool writeDataSQL(QSqlDatabase&, QSqlQuery&, int&, QString&, QString&);
 
 private:
     bool readDataSQL_query(QSqlDatabase&, QVector<QByteArray>&);
     void generateKey(QByteArray&, QByteArray&);
     QString decryptAES(QByteArray&, QByteArray&, QByteArray&);
     QByteArray encryptAES(QString, QByteArray&, QByteArray&);
-    bool writeDataSQL_query(QSqlDatabase&, QSqlQuery&, int, QByteArray, QByteArray);
+    bool writeDataSQL_query(QSqlDatabase&, QSqlQuery&, int&, QByteArray&, QByteArray&);
 };
 
 #endif // DATAMAPPER_H

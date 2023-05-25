@@ -220,11 +220,6 @@ void CommandsExec::initListOfRequests()
     listOfRequests.insert("закрой активную вкладку", {"closeTabBrowser", ""});
 }
 
-void CommandsExec::resendGeoToken(QString token)
-{
-    postGeoToken(token);
-}
-
 void CommandsExec::requestCorrection(QString &query)
 {
     while (query[0] == "-"

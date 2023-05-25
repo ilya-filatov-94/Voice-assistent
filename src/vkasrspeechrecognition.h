@@ -44,7 +44,7 @@ signals:
 public slots:
 
     void requestUploadUrlAPI(QString, QString);
-    void setVkSpeechToken(QString);
+    void setVkSpeechToken(QString&);
 
 private slots:
 

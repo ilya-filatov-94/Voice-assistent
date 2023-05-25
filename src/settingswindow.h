@@ -39,22 +39,19 @@ private:
     QTemporaryFile temporaryFile;
 
     void createInputLines();
-    void changeVisibleLine1();
-    void changeVisibleLine2();
-    void changeVisibleLine3();
-    void changeVisibleLine4();
+    void changeVisibleLine(int);
     void loadReference();
     void writeSettings();
 
 signals:
     void showMainWindow(bool);
+    void settingsSavedSuccessfully(QVector<QString>&);
 
 private slots:
-    void switchWindow();
     void showReference();
 
 public slots:
-    void getSettingsData(QString, QString, QString, QString);
+    void getSettingsData(QVector<QString>&);
 };
 
 #endif // SETTINGSWINDOW_H

@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(yaSpeechRec, &YandexSpeechRecognition::sendRecognizedSpeech, this, &MainWindow::getRecognizedSpeech);
 
     assistant = new CommandsExec(this);
-    connect(this, &MainWindow::sendYandexGeoToken, assistant, &CommandsExec::resendGeoToken);
+    connect(this, &MainWindow::sendYandexGeoToken, assistant, &CommandsExec::postGeoToken);
     connect(this, &MainWindow::requestCommand, assistant, &CommandsExec::choose_action);
     connect(assistant, &CommandsExec::sendErrorToMainWindow, this, &MainWindow::speechRecognitionError);
     connect(assistant, &CommandsExec::sendStatusProcess, this, &MainWindow::updateStatusProcess);
@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setingsWindow = new SettingsWindow(this);
     connect(setingsWindow, &SettingsWindow::showMainWindow, this, &MainWindow::showSettings);
     connect(this, &MainWindow::sendSettingsData, setingsWindow, &SettingsWindow::getSettingsData);
+    connect(setingsWindow, &SettingsWindow::settingsSavedSuccessfully, this, &MainWindow::updateSettings);
     showSettings(false);
 
     setWindowTitle(tr("Голосовой помощник"));
@@ -77,13 +78,17 @@ void MainWindow::createUserInterface()
     toggle_record->setIconSize(QSize(489,491));
     toggle_record->setFixedHeight(489);
     toggle_record->setFixedWidth(491);
-    connect(movie, &QMovie::frameChanged, this, &MainWindow::setButtonIcon);
+    connect(movie, &QMovie::frameChanged, [this](){
+        toggle_record->setIcon(movie->currentPixmap());
+    });
     movie->jumpToNextFrame();
     toggle_record->setIcon(movie->currentPixmap());
 
     //Остальные виджеты
     btn_settings = new QPushButton(tr("Настройки | Справка"), this);
-    connect(btn_settings, &QPushButton::clicked, this, &MainWindow::showSettingsWindow);
+    connect(btn_settings, &QPushButton::clicked, [this](){
+        showSettings(true);
+    });
     header_textArea = new QLabel(tr("Статус: нажмите на изображение микрофона чтобы \r\n"
                                     "активировать голосовой ввод команд"), this);
     textArea = new QTextEdit(this);
@@ -147,11 +152,6 @@ void MainWindow::startRecord()
         header_textArea->setText(tr("Статус: нажмите на изображение микрофона чтобы \r\n"
                                     "активировать голосовой ввод команд"));
     }
-}
-
-void MainWindow::setButtonIcon()
-{
-    toggle_record->setIcon(movie->currentPixmap());
 }
 
 void MainWindow::clearTextArea()
@@ -241,7 +241,7 @@ void MainWindow::readData()
     emit sendYandexSpeechToken(parameters[1]);
     emit sendYandexGeoToken(parameters[2]);
     emit sendPathToFFMPEG(parameters[3]);
-    emit sendSettingsData(parameters[0], parameters[1], parameters[2], parameters[3]);
+    emit sendSettingsData(parameters);
     networkAccess->checkNetworkConnection();
 }
 
@@ -259,11 +259,6 @@ void MainWindow::errorInternetConnection(bool status)
     }
 }
 
-void MainWindow::showSettingsWindow()
-{
-    showSettings(true);
-}
-
 void MainWindow::showSettings(bool visible)
 {
     if (visible) {
@@ -275,4 +270,12 @@ void MainWindow::showSettings(bool visible)
     if (!visible) {
         setingsWindow->setVisible(false);
     }
+}
+
+void MainWindow::updateSettings(QVector<QString>& parameters)
+{
+    emit sendVkSpeechToken(parameters[0]);
+    emit sendYandexSpeechToken(parameters[1]);
+    emit sendYandexGeoToken(parameters[2]);
+    emit sendPathToFFMPEG(parameters[3]);
 }

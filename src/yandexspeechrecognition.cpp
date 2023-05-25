@@ -50,7 +50,7 @@ void YandexSpeechRecognition::onResult(QNetworkReply *reply)
     }
 }
 
-void YandexSpeechRecognition::setYandexSpeechToken(QString token)
+void YandexSpeechRecognition::setYandexSpeechToken(QString& token)
 {
     secretYandexKey = token;
 }
