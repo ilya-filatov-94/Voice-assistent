@@ -4,7 +4,7 @@ NetworkAccess::NetworkAccess(QObject *parent) : QObject(parent)
 {
     connection_dns = false;
     manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)));
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onResult(QNetworkReply*)), Qt::DirectConnection);
 }
 
 NetworkAccess::~NetworkAccess()

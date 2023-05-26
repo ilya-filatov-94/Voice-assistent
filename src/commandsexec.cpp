@@ -92,7 +92,7 @@ void CommandsExec::choose_action(QString requestStr)
     }
 
     if (typeOfRequest == "minimizeActiveWindow" && !notRepeat) {
-        //Окно свери...
+        //Сверни окно...
         notRepeat = true;
         minimizeActiveWindow();
         emit sendStatusProcess("ожидание голосовой команды");
@@ -336,6 +336,9 @@ void CommandsExec::openSelectFileBySearchPath(QString path)
             BringWindowToTop(hWnd);
         #endif
     }
+    else {
+        emit sendErrorToMainWindow(tr("Ошибка! Файл не найден"));
+    }
     notRepeat = false;
 }
 
@@ -493,13 +496,16 @@ void CommandsExec::findAndSelectFileByQDir(QString fileName)
     }
     if (!tempList.isEmpty()) {
         firstFindFile = tempList.at(0);
+        //Открываем проводник и выделяем 1-ый найденный файл по заданному пути
+        arguments.clear();
+        arguments << QLatin1String("/select,");
+        arguments << QDir::toNativeSeparators(tempList.at(0));
+        execProcess->start("explorer", arguments);
+        connect(execProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(resultProcess(int, QProcess::ExitStatus)));
     }
-    //Открываем проводник и выделяем 1-ый найденный файл по заданному пути
-    arguments.clear();
-    arguments << QLatin1String("/select,");
-    arguments << QDir::toNativeSeparators(tempList.at(0));
-    execProcess->start("explorer", arguments);
-    connect(execProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(resultProcess(int, QProcess::ExitStatus)));
+    else {
+        emit sendErrorToMainWindow(tr("Ошибка! Файл не найден"));
+    }
 }
 
 
