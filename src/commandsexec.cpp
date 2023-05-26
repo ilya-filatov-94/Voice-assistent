@@ -504,6 +504,7 @@ void CommandsExec::findAndSelectFileByQDir(QString fileName)
         connect(execProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(resultProcess(int, QProcess::ExitStatus)));
     }
     else {
+        notRepeat = false;
         emit sendErrorToMainWindow(tr("Ошибка! Файл не найден"));
     }
 }
