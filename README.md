@@ -22,9 +22,8 @@
 
 In the future, the processing of voice commands will be expanded.
 
-## Demo
+### Demo
 You can watch the application in action on the video at the [link](https://github.com/ilya-filatov-94/Voice-assistent/blob/main/presentation_app/video_description.mp4)  
-
 ![Demo gif](https://github.com/ilya-filatov-94/Voice-assistent/blob/main/presentation_app/gif_demonstration.gif)  
 
 ## Getting Started
