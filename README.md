@@ -23,6 +23,7 @@
 In the future, the processing of voice commands will be expanded.
 
 ## Demo
+*   You can watch the application in action on the video at the [link](https://github.com/ilya-filatov-94/Voice-assistent/blob/main/presentation_app/video_description.mp4)
 ![Demo gif](https://github.com/ilya-filatov-94/Voice-assistent/blob/main/presentation_app/gif_demonstration.gif)  
 
 ## Getting Started
@@ -35,6 +36,5 @@ Voice assistant uses third party APIs for speech recognition, building routes an
 *   Since the speech recognition APIs accept the ogg audio format, you will need to install the universal media converter to convert the audio [FFmpeg](http://www.ffmpeg.org/download.html).
 *   Using [library Qt-Secret](https://github.com/QuasarApp/Qt-Secret) for encrypting API keys.
 *   This application was compiled using the MinGW 64bit compiler and tested on Windows 10.   
-*   Using building system tool - qmake. 
-*   You can watch the application in action on the video at the [link](https://github.com/ilya-filatov-94/Voice-assistent/blob/main/presentation_app/video_description.mp4)
+*   Using building system tool - qmake.
 
