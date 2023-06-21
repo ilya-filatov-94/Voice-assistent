@@ -36,6 +36,6 @@ Voice assistant uses third party APIs for speech recognition, building routes an
 
 ### Third party tools
 *   Since the speech recognition APIs accept the ogg audio format, you will need to install the universal media converter to convert the audio [FFmpeg](http://www.ffmpeg.org/download.html).
-*   Using [library Qt-Secret](https://github.com/QuasarApp/Qt-Secret) for encrypting API keys.
+*   Using library [Qt-Secret](https://github.com/QuasarApp/Qt-Secret) for encrypting API keys.
 
 
