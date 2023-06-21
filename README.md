@@ -2,7 +2,7 @@
 
 ### Requirements
 
-* Recommended operation system: **Windows** (cross-platform application, but some commands are implemented only for windows)
+* Recommended operation system: **Windows** (cross-platform application, but some commands are implemented only for Windows)
 * Browser for opening internet-resources: **Google Chrome**
 
 ### Assistant Skills 
@@ -32,8 +32,9 @@ You can watch the application in action on the video at the [link](https://githu
 Voice assistant uses third party APIs for speech recognition, building routes and weather forecasting.
 *   [VK ASR API](https://vk.com/voice-tech): free API for speech recognition.
 *   [Yandex SpeechKit](https://cloud.yandex.ru/docs/speechkit/): paid API with a free period of 2 months for speech recognition.
-*   [Yandex GeoCoder](https://yandex.ru/dev/maps/geocoder/?from=mapsapi): API for current location and buildin routes (free for non-commercial use)
+*   [Yandex GeoCoder](https://yandex.ru/dev/maps/geocoder/?from=mapsapi): API for current location and building routes (free for non-commercial use)
 
+### Third party tools
 *   Since the speech recognition APIs accept the ogg audio format, you will need to install the universal media converter to convert the audio [FFmpeg](http://www.ffmpeg.org/download.html).
 *   Using [library Qt-Secret](https://github.com/QuasarApp/Qt-Secret) for encrypting API keys.
 
