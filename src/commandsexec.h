@@ -51,6 +51,9 @@ private:
     void findAndSelectFileByQDir(QString);
 
 
+//    void qtSearchPathFile(QString, QStringList&, QString&);
+
+
 public slots:
     void choose_action(QString);
 

@@ -193,6 +193,7 @@ void CommandsExec::initListOfRequests()
     listOfRequests.insert("найди в youtube видео", {"requestToSearch", "https://www.youtube.com/results?search_query="});
     listOfRequests.insert("найди на youtube видео", {"requestToSearch", "https://www.youtube.com/results?search_query="});
 
+    listOfRequests.insert("найди файл на рабочем столе", {"requestToDir", ""});
     listOfRequests.insert("найди файл по имени на рабочем столе", {"requestToDir", ""});
     listOfRequests.insert("найди файл на рабочем столе по имени", {"requestToDir", ""});
     listOfRequests.insert("найди на рабочем столе файл по имени", {"requestToDir", ""});
@@ -457,14 +458,12 @@ void CommandsExec::findFileInExplorer(QString command)
 
 void CommandsExec::searhPathFile(QDir dir, QStringList& files, QString& fileName)
 {
-    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     QStringList listFiles = dir.entryList(QStringList() << fileName, QDir::Files);
     if (!listFiles.isEmpty()) {
         tempList.clear();
         tempList << dir.absolutePath() << listFiles;
         files << tempList;
     }
-
     QStringList listDir = dir.entryList(QDir::Dirs);
     foreach (QString subdir, listDir) {
         if (subdir == "." || subdir == "..") {
@@ -480,7 +479,8 @@ void CommandsExec::findAndSelectFileByQDir(QString fileName)
     emit sendStatusProcess("запущен поиска файла " + fileName);
     fileName += "*";
     listFiles.clear();
-    searhPathFile(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation), listFiles, fileName);
+    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+    searhPathFile(QDir(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)), listFiles, fileName);
     QApplication::processEvents(QEventLoop::AllEvents);
     tempList.clear();
     QString tempPath;
@@ -499,22 +499,53 @@ void CommandsExec::findAndSelectFileByQDir(QString fileName)
         //Открываем проводник и выделяем 1-ый найденный файл по заданному пути
         arguments.clear();
         arguments << QLatin1String("/select,");
-        arguments << QDir::toNativeSeparators(tempList.at(0));
+        arguments << QDir::toNativeSeparators(firstFindFile);
         execProcess->start("explorer", arguments);
         connect(execProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(resultProcess(int, QProcess::ExitStatus)));
     }
     else {
-        notRepeat = false;
-        emit sendErrorToMainWindow(tr("Ошибка! Файл не найден"));
+            notRepeat = false;
+            emit sendErrorToMainWindow(tr("Ошибка! Файл не найден"));
     }
+
+//    requestCorrection(fileName);
+//    emit sendStatusProcess("запущен поиска файла " + fileName);
+//    listFiles.clear();
+//    qtSearchPathFile(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation), listFiles, fileName);
+//    if (!listFiles.isEmpty()) {
+//          firstFindFile = listFiles.at(0);
+//          //Открываем проводник и выделяем 1-ый найденный файл по заданному пути
+//          arguments.clear();
+//          arguments << QLatin1String("/select,");
+//          arguments << QDir::toNativeSeparators(firstFindFile);
+//          execProcess->start("explorer", arguments);
+//          connect(execProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(resultProcess(int, QProcess::ExitStatus)));
+//    }
+//    else {
+//            notRepeat = false;
+//            emit sendErrorToMainWindow(tr("Ошибка! Файл не найден"));
+//    }
 }
+
+//void CommandsExec::qtSearchPathFile(QString dir, QStringList& files, QString& fileName)
+//{
+//    QDirIterator dirIt(dir, QDirIterator::Subdirectories);
+//    while (dirIt.hasNext()) {
+//        dirIt.next();
+//        if (QFileInfo(dirIt.filePath()).isFile()) {
+//            if (QFileInfo(dirIt.filePath()).baseName().contains(fileName, Qt::CaseInsensitive)) {
+//                files << QFileInfo(dirIt.filePath()).absoluteFilePath();
+//            }
+//        }
+//    }
+//}
 
 
 void CommandsExec::resultProcess(int, QProcess::ExitStatus)
 {
     #ifdef Q_OS_WIN
         QString str = "Рабочий стол";
-        Sleep(500);
+        Sleep(700);
         std::wstring mWstring = str.toStdWString();
         HWND hWnd = FindWindow(nullptr, mWstring.c_str());
         SwitchToThisWindow(hWnd, TRUE);
