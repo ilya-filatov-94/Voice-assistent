@@ -236,12 +236,22 @@ void MainWindow::readData()
         if (msg->exec()==QMessageBox::Ok) {
             delete msg;
         }
+    }  else {
+        const int numberOfParams = parameters.size();
+        if (numberOfParams >= 1) {
+            emit sendVkSpeechToken(parameters[0]);
+        }
+        if (numberOfParams >= 2) {
+            emit sendYandexSpeechToken(parameters[1]);
+        }
+        if (numberOfParams >= 3) {
+            emit sendYandexGeoToken(parameters[2]);
+        }
+        if (numberOfParams >= 4) {
+            emit sendPathToFFMPEG(parameters[3]);
+        }
+        emit sendSettingsData(parameters);
     }
-    emit sendVkSpeechToken(parameters[0]);
-    emit sendYandexSpeechToken(parameters[1]);
-    emit sendYandexGeoToken(parameters[2]);
-    emit sendPathToFFMPEG(parameters[3]);
-    emit sendSettingsData(parameters);
     networkAccess->checkNetworkConnection();
 }
 
